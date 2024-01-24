@@ -1,13 +1,18 @@
 [versions]
 agp = "8.2.0-alpha11"
 kotlin = "1.8.10"
-core-ktx = "1.9.0"
+ksp = "1.8.10-1.0.9"
+core-ktx = "1.12.0"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
-lifecycle-runtime-ktx = "2.6.2"
-activity-compose = "1.8.1"
-compose-bom = "2023.03.00"
+lifecycle-runtime-ktx = "2.7.0"
+activity-compose = "1.8.2"
+compose-bom = "2023.10.01"
+retrofit = "2.9.0"
+moshi = "1.15.0"
+dagger-hilt = "2.44"
+
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -24,10 +29,17 @@ ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview
 ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 material3 = { group = "androidx.compose.material3", name = "material3" }
+moshi-codegen = { group = "com.squareup.moshi", name="moshi-kotlin-codegen", version.ref = "moshi"}
+moshi-kotlin = { group = "com.squareup.moshi", name="moshi-kotlin", version.ref = "moshi"}
+retrofit = { group = "com.squareup.retrofit2", name="retrofit", version.ref = "retrofit"}
+dagger-hiltAndroid = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger-hilt" }
+dagger-hiltCompiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "dagger-hilt" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kspDevTool = {id = "com.google.devtools.ksp", version.ref = "ksp"}
+daggerHilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger-hilt" }
 
 [bundles]
 
