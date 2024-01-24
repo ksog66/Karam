@@ -11,7 +11,8 @@ activity-compose = "1.8.2"
 compose-bom = "2023.10.01"
 retrofit = "2.9.0"
 moshi = "1.15.0"
-dagger-hilt = "2.44"
+dagger-hilt = "2.48"
+datastore = "1.1.0-dev01"
 
 
 [libraries]
@@ -32,8 +33,10 @@ material3 = { group = "androidx.compose.material3", name = "material3" }
 moshi-codegen = { group = "com.squareup.moshi", name="moshi-kotlin-codegen", version.ref = "moshi"}
 moshi-kotlin = { group = "com.squareup.moshi", name="moshi-kotlin", version.ref = "moshi"}
 retrofit = { group = "com.squareup.retrofit2", name="retrofit", version.ref = "retrofit"}
+retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit"}
 dagger-hiltAndroid = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger-hilt" }
 dagger-hiltCompiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "dagger-hilt" }
+androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

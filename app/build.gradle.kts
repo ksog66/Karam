@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.kklabs.karam"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.kklabs.karam"
@@ -30,17 +30,24 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+
+            buildConfigField("String", "BASE_URL", "\"http://192.168.1.10\"")
+        }
+
+        debug {
+            buildConfigField("String", "BASE_URL", "\"http://192.168.1.10\"")
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
@@ -50,6 +57,10 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {
@@ -65,6 +76,8 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.moshi.kotlin)
     implementation(libs.dagger.hiltAndroid)
+    implementation(libs.androidx.datastore)
+    implementation(libs.retrofit.converter.moshi)
     ksp(libs.dagger.hiltCompiler)
     ksp(libs.moshi.codegen)
 
