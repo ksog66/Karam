@@ -1,7 +1,7 @@
 package com.kklabs.karam.di
 
 import com.kklabs.karam.BuildConfig
-import com.kklabs.karam.data.remote.ApiV1
+import com.kklabs.karam.data.remote.NetworkApi
 import com.kklabs.karam.data.remote.CommonHeadersInterceptor
 import com.kklabs.karam.data.util.NetworkResponseAdapterFactory
 import com.squareup.moshi.Moshi
@@ -28,8 +28,8 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideApiV1(@RetrofitStore retrofit: Retrofit): ApiV1 {
-        return retrofit.create(ApiV1::class.java)
+    fun provideApiV1(@RetrofitStore retrofit: Retrofit): NetworkApi {
+        return retrofit.create(NetworkApi::class.java)
     }
 
     @Singleton
