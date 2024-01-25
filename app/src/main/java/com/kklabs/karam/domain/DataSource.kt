@@ -1,4 +1,4 @@
-package com.kklabs.karam.data
+package com.kklabs.karam.domain
 
 import com.kklabs.karam.data.remote.NetworkResponse
 import com.kklabs.karam.data.remote.request.CreateTaskRequest
@@ -10,7 +10,6 @@ import com.kklabs.karam.data.remote.response.ModuleData
 import com.kklabs.karam.data.remote.response.TaskResponse
 import com.kklabs.karam.data.remote.response.TasklogResponse
 import com.kklabs.karam.data.remote.response.UserResponse
-import com.kklabs.karam.domain.model.User
 
 interface DataSource {
 

@@ -1,6 +1,7 @@
 package com.kklabs.karam.data.remote
 
 import com.kklabs.karam.data.DataSource
+import com.kklabs.karam.data.mapper.toUser
 import com.kklabs.karam.data.remote.request.CreateTaskRequest
 import com.kklabs.karam.data.remote.request.CreateTasklogRequest
 import com.kklabs.karam.data.remote.request.CreateUserRequest
@@ -10,8 +11,11 @@ import com.kklabs.karam.data.remote.response.ModuleData
 import com.kklabs.karam.data.remote.response.TaskResponse
 import com.kklabs.karam.data.remote.response.TasklogResponse
 import com.kklabs.karam.data.remote.response.UserResponse
+import com.kklabs.karam.domain.model.User
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RemoteDataSource @Inject constructor(
     private val api: NetworkApi
 ) : DataSource {

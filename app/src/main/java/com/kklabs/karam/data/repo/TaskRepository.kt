@@ -5,7 +5,9 @@ import com.kklabs.karam.data.remote.NetworkResponse
 import com.kklabs.karam.data.remote.request.CreateTaskRequest
 import com.kklabs.karam.data.remote.response.TaskResponse
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class TaskRepository @Inject constructor(
     private val dataSource: DataSource
 ) {

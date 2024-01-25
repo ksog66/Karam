@@ -6,5 +6,6 @@ plugins {
     alias(libs.plugins.kspDevTool) apply false
     alias(libs.plugins.daggerHilt) apply false
     alias(libs.plugins.googleServices) apply false
+    alias(libs.plugins.firebaseCrashlytics) apply false
 }
 true // Needed to make the Suppress annotation work for the plugins block

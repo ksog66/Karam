@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Karam</string>
+    <string name="login_title">Login</string>
+    <string name="new_here">New here</string>
+    <string name="create_account">Create account</string>
+    <string name="karam_karo_literal">Karam \n Karo</string>
+    <string name="parth_literal">Parth</string>
+    <string name="web_client_id">631782921302-l4qosmm8am4l5f5b962r5aek7iaam9a8.apps.googleusercontent.com</string>
+    <string name="sign_up_with_google">Sign up with Google</string>
 </resources>

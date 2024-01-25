@@ -1,5 +1,6 @@
 package com.kklabs.karam.di
 
+import android.content.Context
 import com.kklabs.karam.BuildConfig
 import com.kklabs.karam.data.remote.NetworkApi
 import com.kklabs.karam.data.remote.CommonHeadersInterceptor
@@ -8,6 +9,7 @@ import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.converter.moshi.MoshiConverterFactory
 import okhttp3.OkHttpClient
@@ -19,6 +21,12 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 object NetworkModule {
+
+    @Provides
+    @Singleton
+    fun provideContext(@ApplicationContext context: Context): Context {
+        return context
+    }
 
     @Singleton
     @Provides

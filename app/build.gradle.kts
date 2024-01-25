@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kspDevTool)
     alias(libs.plugins.daggerHilt)
     alias(libs.plugins.googleServices)
+    alias(libs.plugins.firebaseCrashlytics)
 }
 
 android {
@@ -93,6 +94,14 @@ dependencies {
     implementation(libs.firebase.analytics)
 
     implementation(libs.playServicesAuth)
+
+    implementation(libs.materialIcons.extended)
+    implementation(libs.materialIcons.core)
+    implementation(libs.hilt.navigationCompose)
+
+    //lifecycle
+    implementation(libs.lifecycle.viewModelCompose)
+    implementation(libs.lifecycle.runtimeCompose)
 
     ksp(libs.dagger.hiltCompiler)
     ksp(libs.moshi.codegen)

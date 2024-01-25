@@ -9,11 +9,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.kklabs.karam.presentation.auth.AuthRoute
+import com.kklabs.karam.presentation.auth.GoogleAuthUiClient
+import com.kklabs.karam.presentation.home.HomeRoute
 import com.kklabs.karam.presentation.navigation.KaramScreens
+import com.kklabs.karam.presentation.tasklogs.TasklogsRoute
+import com.kklabs.karam.presentation.tasks.CreateTaskRoute
+import com.kklabs.karam.presentation.welcome.WelcomeRoute
 
 @Composable
-fun KaramApp(modifier: Modifier = Modifier) {
+fun KaramApp(modifier: Modifier = Modifier, googleAuthUiClient: GoogleAuthUiClient) {
 
     Surface(
         modifier = modifier.fillMaxSize(),
@@ -24,7 +31,8 @@ fun KaramApp(modifier: Modifier = Modifier) {
         Scaffold { paddingValues ->
             KaramNavHost(
                 modifier = Modifier.padding(paddingValues),
-                navHost = navController
+                navHost = navController,
+                googleAuthUiClient = googleAuthUiClient
             )
         }
     }
@@ -33,13 +41,33 @@ fun KaramApp(modifier: Modifier = Modifier) {
 @Composable
 fun KaramNavHost(
     modifier: Modifier = Modifier,
-    navHost: NavHostController
+    navHost: NavHostController,
+    googleAuthUiClient: GoogleAuthUiClient
 ) {
     NavHost(
         navController = navHost,
-        startDestination = KaramScreens.Welcome.route
+        startDestination = KaramScreens.LoginScreen.route
     ) {
-        
+        composable(route = KaramScreens.Welcome.route) {
+            WelcomeRoute(modifier)
+        }
 
+        composable(route = KaramScreens.LoginScreen.route) {
+            AuthRoute(modifier, googleAuthUiClient) {
+                navHost.navigate(KaramScreens.Home.route)
+            }
+        }
+
+        composable(route = KaramScreens.Home.route) {
+            HomeRoute(modifier)
+        }
+
+        composable(route = KaramScreens.CreateTask.route) {
+            CreateTaskRoute(modifier)
+        }
+
+        composable(route = KaramScreens.Tasklogs.route) {
+            TasklogsRoute(modifier)
+        }
     }
 }

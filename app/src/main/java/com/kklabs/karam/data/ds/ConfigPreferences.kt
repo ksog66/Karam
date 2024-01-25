@@ -6,6 +6,8 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.kklabs.karam.domain.model.User
+import com.squareup.moshi.Moshi
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -15,10 +17,12 @@ import javax.inject.Inject
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "app_config")
 
 class ConfigPreferences @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val moshi: Moshi
 ) {
 
     private val AUTH_TOKEN_PREFERENCE_KEY = stringPreferencesKey("auth_token")
+    private val USER_DATA_PREFERENCE_KEY = stringPreferencesKey("user_data")
 
     fun getApplicationPackage(): String {
         return context.packageName
@@ -35,6 +39,25 @@ class ConfigPreferences @Inject constructor(
     suspend fun setAuthToken(token: String) {
         context.dataStore.edit { configPref ->
             configPref[AUTH_TOKEN_PREFERENCE_KEY] = token
+        }
+    }
+
+    suspend fun saveUserData(user: User) {
+        context.dataStore.edit { configPref ->
+            val userJson = moshi.adapter(User::class.java).toJson(user)
+            configPref[USER_DATA_PREFERENCE_KEY] = userJson
+        }
+    }
+
+    fun getUserData(): User? = runBlocking {
+        return@runBlocking try {
+            val userString = context.dataStore.data
+                .map { pref ->
+                    pref[USER_DATA_PREFERENCE_KEY] ?: ""
+                }.first()
+            moshi.adapter(User::class.java).fromJson(userString)
+        } catch (e: Exception) {
+            null
         }
     }
 
