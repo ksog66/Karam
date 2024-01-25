@@ -13,6 +13,10 @@ retrofit = "2.9.0"
 moshi = "1.15.0"
 dagger-hilt = "2.48"
 datastore = "1.1.0-dev01"
+navigation-compose = "2.7.6"
+google-services = "4.4.0"
+firebase-bom = "32.7.1"
+play-service-auth = "20.7.0"
 
 
 [libraries]
@@ -37,12 +41,19 @@ retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter
 dagger-hiltAndroid = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger-hilt" }
 dagger-hiltCompiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "dagger-hilt" }
 androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore"}
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose" }
+firebaseBom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom"}
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics"}
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics"}
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth"}
+playServicesAuth = {group = "com.google.android.gms", name = "play-services-auth", version.ref = "play-service-auth"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kspDevTool = {id = "com.google.devtools.ksp", version.ref = "ksp"}
 daggerHilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger-hilt" }
+googleServices = { id = "com.google.gms.google-services", version.ref = "google-services"}
 
 [bundles]
 

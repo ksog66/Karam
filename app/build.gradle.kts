@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.kspDevTool)
     alias(libs.plugins.daggerHilt)
+    alias(libs.plugins.googleServices)
 }
 
 android {
@@ -73,11 +74,26 @@ dependencies {
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
+    implementation(libs.androidx.navigation.compose)
+
+    //retrofit
     implementation(libs.retrofit)
     implementation(libs.moshi.kotlin)
-    implementation(libs.dagger.hiltAndroid)
-    implementation(libs.androidx.datastore)
     implementation(libs.retrofit.converter.moshi)
+
+    //hilt
+    implementation(libs.dagger.hiltAndroid)
+    //datastore
+    implementation(libs.androidx.datastore)
+
+    //firebase
+    implementation(platform(libs.firebaseBom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
+
+    implementation(libs.playServicesAuth)
+
     ksp(libs.dagger.hiltCompiler)
     ksp(libs.moshi.codegen)
 
