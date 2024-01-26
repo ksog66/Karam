@@ -1,5 +1,6 @@
 package com.kklabs.karam.presentation.auth
 
+import android.util.Log
 import com.kklabs.karam.data.ds.ConfigPreferences
 import com.kklabs.karam.data.mapper.toUser
 import com.kklabs.karam.data.remote.NetworkResponse
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
+private const val TAG = "AuthViewModel"
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val userRepository: UserRepository,
@@ -24,10 +26,10 @@ class AuthViewModel @Inject constructor(
 
     fun onSignInResult(result: SignInResult) = launchIO {
         try {
-            val isSignInSuccessful = result.data != null
-            if (isSignInSuccessful && !result.data!!.isDetailNull()) {
+            val isSignInSuccessful = result.data != null && !result.data.isDetailNull()
+            if (isSignInSuccessful) {
                 val user =
-                    createUser(result.data.name!!, result.data.email!!, result.data.username!!)
+                    createUser(result.data!!.name!!, result.data!!.email!!, result.data!!.username!!)
                 saveUser(user)
             }
             _state.update {
@@ -37,7 +39,12 @@ class AuthViewModel @Inject constructor(
                 )
             }
         } catch (e: Exception) {
-
+            _state.update {
+                it.copy(
+                    isSignInSuccessful = false,
+                    signInError = e.message
+                )
+            }
         }
     }
 
@@ -64,6 +71,7 @@ class AuthViewModel @Inject constructor(
                 }
             }
         } catch (e: Exception) {
+            Log.e(TAG,"Error while creating user",e)
             throw e
         }
     }

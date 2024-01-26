@@ -1,10 +1,12 @@
 package com.kklabs.karam.di
 
 import android.content.Context
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.kklabs.karam.BuildConfig
 import com.kklabs.karam.data.remote.NetworkApi
 import com.kklabs.karam.data.remote.CommonHeadersInterceptor
 import com.kklabs.karam.data.util.NetworkResponseAdapterFactory
+import com.kklabs.karam.data.util.adapter.CustomDateAdapter
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -31,7 +33,9 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideMoshi(): Moshi {
-        return Moshi.Builder().build()
+        return Moshi.Builder()
+            .add(CustomDateAdapter())
+            .build()
     }
 
     @Provides
@@ -52,12 +56,20 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideBaseOkHttpClient(
+        chuckerInterceptor: ChuckerInterceptor,
         commonHeadersInterceptor: CommonHeadersInterceptor
         //authenticator: Authenticator
     ): OkHttpClient {
         return OkHttpClient.Builder().apply {
             addInterceptor(commonHeadersInterceptor)
+            addInterceptor(chuckerInterceptor)
         }.build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideChuckerInterceptor(context: Context): ChuckerInterceptor {
+        return ChuckerInterceptor.Builder(context).build()
     }
 
     @Provides
@@ -71,7 +83,7 @@ object NetworkModule {
             .baseUrl(BuildConfig.BASE_URL)
             .client(clientBuilder.build())
             .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .addCallAdapterFactory(NetworkResponseAdapterFactory(moshi))
+            .addCallAdapterFactory(NetworkResponseAdapterFactory())
             .build()
     }
 }

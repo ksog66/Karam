@@ -19,6 +19,7 @@ firebase-bom = "32.7.1"
 play-service-auth = "20.7.0"
 material-compose = "1.6.0"
 compose-hilt = "1.1.0"
+chucker = "3.5.2"
 firebase-crashlytics = "2.9.9"
 
 
@@ -55,6 +56,9 @@ materialIcons-core = { group = "androidx.compose.material", name = "material-ico
 hilt-navigationCompose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "compose-hilt" }
 lifecycle-viewModelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle-runtime-ktx"}
 lifecycle-runtimeCompose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle-runtime-ktx"}
+chucker-debug = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chucker"}
+chucker-release = { group = "com.github.chuckerteam.chucker", name = "library-no-op", version.ref = "chucker"}
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

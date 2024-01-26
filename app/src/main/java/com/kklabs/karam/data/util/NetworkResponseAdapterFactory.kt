@@ -9,7 +9,7 @@ import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
-internal class NetworkResponseAdapterFactory(private val moshi: Moshi) : CallAdapter.Factory() {
+internal class NetworkResponseAdapterFactory() : CallAdapter.Factory() {
 
     override fun get(
         returnType: Type,
@@ -42,7 +42,7 @@ internal class NetworkResponseAdapterFactory(private val moshi: Moshi) : CallAda
 
         val errorBodyConverter = retrofit.nextResponseBodyConverter<ErrorResponse>(null, ErrorResponse::class.java, annotations)
 
-        return NetworkResponseAdapter<Any>(moshi, successBodyType, errorBodyConverter)
+        return NetworkResponseAdapter<Any>(successBodyType, errorBodyConverter)
     }
 
 }

@@ -29,6 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.kklabs.karam.R
+import com.kklabs.karam.presentation.components.TextH1
 import com.kklabs.karam.presentation.components.TextH10
 import com.kklabs.karam.presentation.components.TextP30
 import com.kklabs.karam.ui.theme.KaramTheme
@@ -55,8 +56,8 @@ fun AuthRoute(
     LaunchedEffect(key1 = state.isSignInSuccessful) {
         if(state.isSignInSuccessful) {
             navigateToHome.invoke()
-            //showShortToast()
             viewModel.resetState()
+            googleAuthUiClient.signOut()
         }
     }
 
@@ -107,12 +108,12 @@ fun AuthScreen(
             .fillMaxSize()
             .padding(horizontal = 16.dp),
     ) {
-        TextH10(
+        TextH1(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             text = stringResource(id = R.string.karam_karo_literal)
         )
 
-        Spacer(modifier = Modifier.width(24.dp))
+        Spacer(modifier = Modifier.width(36.dp))
 
         TextH10(
             modifier = Modifier.align(Alignment.End),

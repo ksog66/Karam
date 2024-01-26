@@ -3,15 +3,14 @@ package com.kklabs.karam.data.remote.response
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.util.Date
 
 @JsonClass(generateAdapter = true)
 data class TasklogResponse(
     @Json(name = "content")
     val content: String,
-    @Json(name = "date")
-    val date: Long,
     @Json(name = "date_created")
-    val dateCreated: String,
+    val dateCreated: Date,
     @Json(name = "id")
     val id: Int,
     @Json(name = "task_id")

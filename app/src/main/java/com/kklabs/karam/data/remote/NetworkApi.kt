@@ -17,31 +17,31 @@ import retrofit2.http.Query
 
 interface NetworkApi {
 
-    @GET("home")
+    @GET("/api/v1/home")
     suspend fun getHomeData(): NetworkResponse<HomeDataResponse>
 
-    @POST("users")
+    @POST("/api/v1/user/")
     suspend fun createUser(
         @Body request: CreateUserRequest
     ): NetworkResponse<UserResponse>
 
-    @POST("task")
+    @POST("/api/v1/task")
     suspend fun createTask(
         @Body request: CreateTaskRequest
     ): NetworkResponse<TaskResponse>
 
-    @GET("task/{id}")
+    @GET("/api/v1/task/{id}")
     suspend fun getTask(@Path(Keys.ID) id: Long): NetworkResponse<TaskResponse>
 
-    @GET("task")
+    @GET("/api/v1/task")
     suspend fun getTasks(): NetworkResponse<Nothing>
 
-    @POST("tasklog")
+    @POST("/api/v1/tasklog")
     suspend fun createTasklog(
         @Body request: CreateTasklogRequest
     ): NetworkResponse<TasklogResponse>
 
-    @GET("tasklog")
+    @GET("/api/v1/tasklog")
     suspend fun getTasklogs(
         @Query(Keys.TASK_ID) taskId: Long,
         @Query(Keys.PAGE_KEY) pageKey: Int? = null

@@ -3,14 +3,15 @@ package com.kklabs.karam.data.remote.response
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.util.Date
 
 @JsonClass(generateAdapter = true)
 data class TaskResponse(
     val color: String,
     @Json(name = "date_created")
-    val dateCreated: Long,
+    val dateCreated: Date,
     @Json(name = "date_modified")
-    val dateModified: Long,
+    val dateModified: Date?,
     @Json(name = "icon")
     val icon: String,
     @Json(name = "id")

@@ -11,7 +11,6 @@ import retrofit2.Converter
 import java.lang.reflect.Type
 
 internal class NetworkResponseAdapter<S: Any>(
-    private val moshi: Moshi,
     private val successType: Type,
     private val errorBodyConverter: Converter<ResponseBody, ErrorResponse>
 ): CallAdapter<S, Call<NetworkResponse<S>>> {
@@ -19,7 +18,7 @@ internal class NetworkResponseAdapter<S: Any>(
     override fun responseType(): Type = successType
 
     override fun adapt(call: Call<S>): Call<NetworkResponse<S>> {
-        return NetworkResponseCall(moshi, call, errorBodyConverter)
+        return NetworkResponseCall(call, errorBodyConverter)
     }
 
 }

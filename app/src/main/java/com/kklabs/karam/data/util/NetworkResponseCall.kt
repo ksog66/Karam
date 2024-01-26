@@ -18,7 +18,6 @@ import java.lang.reflect.Type
 private const val DEFAULT_ERR_MESSAGE = "Unknown error occurred"
 
 internal class NetworkResponseCall<S : Any>(
-    private val moshi: Moshi,
     private val delegate: Call<S>,
     private val errorConverter: Converter<ResponseBody, ErrorResponse>
 ) : Call<NetworkResponse<S>> {
@@ -100,7 +99,7 @@ internal class NetworkResponseCall<S : Any>(
 
     override fun isExecuted() = delegate.isExecuted
 
-    override fun clone() = NetworkResponseCall(moshi, delegate.clone(), errorConverter)
+    override fun clone() = NetworkResponseCall(delegate.clone(), errorConverter)
 
     override fun isCanceled() = delegate.isCanceled
 

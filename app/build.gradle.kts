@@ -33,11 +33,11 @@ android {
                 "proguard-rules.pro"
             )
 
-            buildConfigField("String", "BASE_URL", "\"http://192.168.1.10\"")
+            buildConfigField("String", "BASE_URL", "\"http://192.168.1.10:5000\"")
         }
 
         debug {
-            buildConfigField("String", "BASE_URL", "\"http://192.168.1.10\"")
+            buildConfigField("String", "BASE_URL", "\"http://192.168.1.10:5000\"")
         }
     }
     compileOptions {
@@ -102,6 +102,10 @@ dependencies {
     //lifecycle
     implementation(libs.lifecycle.viewModelCompose)
     implementation(libs.lifecycle.runtimeCompose)
+
+    //network logger
+    debugImplementation(libs.chucker.debug)
+    releaseImplementation(libs.chucker.release)
 
     ksp(libs.dagger.hiltCompiler)
     ksp(libs.moshi.codegen)
