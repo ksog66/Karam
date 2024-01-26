@@ -345,11 +345,14 @@ fun TextC50(
 
 @Composable
 fun TextC70(
-    text: String, modifier: Modifier = Modifier, maxLines: Int = Int.MAX_VALUE
+    text: String,
+    modifier: Modifier = Modifier,
+    maxLines: Int = Int.MAX_VALUE,
+    color: Color = Color.Blue
 ) {
     Text(
         text = text.uppercase(Locale.getDefault()),
-        color = Color.Blue,
+        color = color,
         fontSize = 12.sp,
         fontWeight = FontWeight.W500,
         lineHeight = 14.sp,
