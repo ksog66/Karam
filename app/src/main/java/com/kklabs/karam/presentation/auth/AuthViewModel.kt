@@ -21,7 +21,7 @@ class AuthViewModel @Inject constructor(
     private val configPreferences: ConfigPreferences
 ) : BaseViewModel() {
 
-    private val _state = MutableStateFlow(SignInState())
+    private val _state = MutableStateFlow(SignInState().copy(existingUser = configPreferences.getUserData()))
     val state = _state.asStateFlow()
 
     fun onSignInResult(result: SignInResult) = launchIO {
@@ -42,7 +42,8 @@ class AuthViewModel @Inject constructor(
             _state.update {
                 it.copy(
                     isSignInSuccessful = false,
-                    signInError = e.message
+                    signInError = e.message,
+                    existingUser = null
                 )
             }
         }

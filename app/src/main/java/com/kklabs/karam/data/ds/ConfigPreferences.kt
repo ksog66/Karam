@@ -9,6 +9,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.kklabs.karam.domain.model.User
 import com.squareup.moshi.Moshi
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
@@ -24,6 +25,7 @@ class ConfigPreferences @Inject constructor(
     private val AUTH_TOKEN_PREFERENCE_KEY = stringPreferencesKey("auth_token")
     private val USER_DATA_PREFERENCE_KEY = stringPreferencesKey("user_data")
 
+    val existingUser = MutableStateFlow(getUserData())
     fun getApplicationPackage(): String {
         return context.packageName
     }

@@ -47,8 +47,8 @@ fun AuthRoute(
     val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(key1 = Unit) {
-        if(googleAuthUiClient.getSignedInUser() != null) {
+    LaunchedEffect(key1 = state.existingUser) {
+        if (state.existingUser != null) {
             navigateToHome.invoke()
         }
     }
