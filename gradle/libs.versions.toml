@@ -21,6 +21,8 @@ material-compose = "1.6.0"
 compose-hilt = "1.1.0"
 chucker = "3.5.2"
 firebase-crashlytics = "2.9.9"
+constraintlayout = "2.1.4"
+constraintlayout-compose = "1.0.1"
 
 
 [libraries]
@@ -58,7 +60,8 @@ lifecycle-viewModelCompose = { group = "androidx.lifecycle", name = "lifecycle-v
 lifecycle-runtimeCompose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle-runtime-ktx"}
 chucker-debug = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chucker"}
 chucker-release = { group = "com.github.chuckerteam.chucker", name = "library-no-op", version.ref = "chucker"}
-
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-constraintCompose = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayout-compose"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

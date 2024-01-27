@@ -102,6 +102,8 @@ dependencies {
     //lifecycle
     implementation(libs.lifecycle.viewModelCompose)
     implementation(libs.lifecycle.runtimeCompose)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.constraintCompose)
 
     //network logger
     debugImplementation(libs.chucker.debug)
