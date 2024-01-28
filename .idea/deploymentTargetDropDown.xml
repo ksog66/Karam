@@ -2,6 +2,15 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="HeatmapPreview">
+        <State />
+      </entry>
+      <entry key="PreviewGithubChart">
+        <State />
+      </entry>
+      <entry key="TaskDisplayPreview">
+        <State />
+      </entry>
       <entry key="app">
         <State />
       </entry>

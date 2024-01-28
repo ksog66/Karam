@@ -27,12 +27,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.kklabs.karam.R
+import com.kklabs.karam.data.remote.response.TasksKaram
 import com.kklabs.karam.domain.model.Task
 import com.kklabs.karam.presentation.components.Heatmap
 import com.kklabs.karam.presentation.components.TextC70
@@ -45,9 +47,27 @@ import java.util.Date
 @Composable
 fun TaskDisplay(
     modifier: Modifier = Modifier,
-    task: Task,
+    task: TasksKaram?,
+    type: TaskDisplayType,
     tasklogs: Map<Long, Int>
 ) {
+    val isIndividual = type == TaskDisplayType.INDIVIDUAL
+    val title = when(type) {
+        TaskDisplayType.CUMULATIVE -> {
+            stringResource(id = R.string.all_karam)
+        }
+        TaskDisplayType.INDIVIDUAL -> {
+            task!!.name
+        }
+    }
+    val baseColor = when(type) {
+        TaskDisplayType.CUMULATIVE -> {
+            "#FFFFFF"
+        }
+        TaskDisplayType.INDIVIDUAL -> {
+            task!!.color
+        }
+    }
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -81,47 +101,53 @@ fun TaskDisplay(
                         )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
-                    TextH20(text = task.title)
+                    TextH20(text = title )
                 }
-                Button(
-                    onClick = { /* Handle log click */ },
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp, vertical = 2.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Black
-                    )
-                ) {
-                    TextH50(text = "Log", color = Color.White)
+                if (isIndividual) {
+                    Button(
+                        onClick = { /* Handle log click */ },
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp, vertical = 2.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Black
+                        )
+                    ) {
+                        TextH50(text = "Log", color = Color.White)
+                    }
                 }
             }
             Spacer(modifier = Modifier.height(4.dp))
             Heatmap(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(start = 8.dp),
                 data = tasklogs,
-                baseColor = task.color
+                baseColor = baseColor
             )
         }
     }
+}
+
+enum class TaskDisplayType {
+    CUMULATIVE,
+    INDIVIDUAL
 }
 
 @Preview
 @Composable
 fun TaskDisplayPreview() {
     KaramTheme {
-        val task = Task(
-            1,
-            "#FFFFFF",
-            Date(),
-            null,
-            "Gym",
-            "Gym",
-            1
-        )
         val testData = mutableMapOf<Long, Int>().apply {
             for (i in 1..365) {
                 put(System.currentTimeMillis() - i * 24 * 60 * 60 * 1000, (1..10).random())
             }
         }
-        TaskDisplay(task = task, tasklogs = testData)
+        val task = TasksKaram(
+            "#FFFFFF",
+            "GYM",
+            2,
+            testData,
+            "Gym"
+        )
+
+        TaskDisplay(task = task, tasklogs = testData, type = TaskDisplayType.INDIVIDUAL)
     }
 }

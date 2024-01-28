@@ -25,7 +25,7 @@ class CommonHeadersInterceptor @Inject constructor(
             requestBuilder.addHeader(CONNECTION, "keep-alive")
             requestBuilder.addHeader(CONTENT_ACCEPT, "application/json")
 //            requestBuilder.addHeader(API_KEY, BuildConfig.API_KEY)
-            requestBuilder.addHeader(AUTHORIZATION, configPreferences.getAuthToken())
+            requestBuilder.addHeader(AUTHORIZATION, "Bearer ${configPreferences.getAuthToken()}")
             requestBuilder.addHeader(APP_CLIENT, "consumer-android")
             requestBuilder.addHeader(APP_IDENTIFIER, configPreferences.getApplicationPackage())
             requestBuilder.addHeader(APP_VERSION_CODE, packageInfo.versionCode.toString())

@@ -7,7 +7,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class HomeDataResponse(
     @Json(name = "cumulative_karam")
-    val cumulativeKaram: Map<String, Int>,
+    val cumulativeKaram: Map<Long, Int>,
     @Json(name = "tasks_karam")
     val tasksKaram: List<TasksKaram>
 )

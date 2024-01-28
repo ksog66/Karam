@@ -68,7 +68,9 @@ fun KaramNavHost(
         }
 
         composable(route = KaramScreens.Home.route) {
-            HomeRoute(modifier)
+            HomeRoute(modifier) {
+                navHost.navigate(KaramScreens.CreateTask.route)
+            }
         }
 
         composable(route = KaramScreens.CreateTask.route) {

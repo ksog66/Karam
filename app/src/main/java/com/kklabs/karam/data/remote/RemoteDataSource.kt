@@ -20,8 +20,8 @@ class RemoteDataSource @Inject constructor(
     private val api: NetworkApi
 ) : DataSource {
 
-    override suspend fun getHomeData(): NetworkResponse<HomeDataResponse> {
-        return when (val res = api.getHomeData()) {
+    override suspend fun getHomeData(year: String): NetworkResponse<HomeDataResponse> {
+        return when (val res = api.getHomeData(year)) {
             is NetworkResponse.Error -> {
                 res
             }

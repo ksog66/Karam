@@ -55,7 +55,7 @@ fun MonthNamesRow(modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 2.dp),
-        horizontalArrangement = Arrangement.spacedBy(48.dp)
+        horizontalArrangement = Arrangement.spacedBy(52.dp)
     ) {
         months.forEach { month ->
             TextC70(

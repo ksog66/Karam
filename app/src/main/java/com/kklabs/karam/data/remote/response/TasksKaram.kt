@@ -13,7 +13,7 @@ data class TasksKaram(
     @Json(name = "id")
     val id: Int,
     @Json(name = "karam")
-    val karam: Map<String, Int>,
+    val karam: Map<Long, Int>,
     @Json(name = "name")
     val name: String
 )
