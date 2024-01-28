@@ -37,10 +37,10 @@ import com.kklabs.karam.R
 import com.kklabs.karam.data.remote.response.TasksKaram
 import com.kklabs.karam.domain.model.Task
 import com.kklabs.karam.presentation.components.Heatmap
-import com.kklabs.karam.presentation.components.TextC70
 import com.kklabs.karam.presentation.components.TextH20
 import com.kklabs.karam.presentation.components.TextH50
 import com.kklabs.karam.ui.theme.KaramTheme
+import com.kklabs.karam.util.fetchIcon
 import java.time.Instant
 import java.util.Date
 
@@ -62,7 +62,7 @@ fun TaskDisplay(
     }
     val baseColor = when(type) {
         TaskDisplayType.CUMULATIVE -> {
-            "#FFFFFF"
+            "#28a745"
         }
         TaskDisplayType.INDIVIDUAL -> {
             task!!.color
@@ -85,19 +85,18 @@ fun TaskDisplay(
         ) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Row(
+                    modifier = Modifier.padding(horizontal = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(48.dp)
-//                    .background(Color(task.color))
+                            .size(36.dp)
                             .clip(RoundedCornerShape(8.dp))
                     ) {
-                        // Assuming the task.icon is a drawable resource ID
                         Image(
-                            painter = painterResource(id = R.drawable.ic_launcher_foreground), // Replace with the actual drawable resource
+                            painter = painterResource(fetchIcon(task?.icon)), // Replace with the actual drawable resource
                             contentDescription = null, // Provide a meaningful content description
-                            modifier = Modifier.size(48.dp)
+                            modifier = Modifier.size(36.dp)
                         )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
