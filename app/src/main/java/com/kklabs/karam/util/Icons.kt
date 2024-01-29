@@ -1,6 +1,7 @@
 package com.kklabs.karam.util
 
 object TaskIcons {
+
     const val ALARM = "alarm"
     const val BED = "bed"
     const val BOOK = "book"
@@ -22,5 +23,12 @@ object TaskIcons {
     const val STUDY = "study"
     const val WOMAN = "woman"
 
+    val AllTaskIcons = listOf(
+        ALARM, BED, BOOK, CAMERA,
+        CODE, COFFEE, CONTROLLER, CYCLE,
+        FITNESS, GROCERY, HEART, MAN,
+        MUSIC, PAINT, RUPPEE, SAVINGS,
+        SHOWER, SOCCER, STUDY, WOMAN
+    )
 
 }

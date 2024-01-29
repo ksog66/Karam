@@ -56,6 +56,7 @@ fun generateYearList(startYear: Int): List<Int> {
 fun fetchIcon(icon: String?): Int {
     return when (icon) {
         ALARM -> R.drawable.alarm_icon
+        BED -> R.drawable.bed_icon
         BOOK -> R.drawable.book_icon
         CAMERA -> R.drawable.camera_icon
         CODE -> R.drawable.code_icon

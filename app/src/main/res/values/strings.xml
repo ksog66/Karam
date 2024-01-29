@@ -8,4 +8,7 @@
     <string name="web_client_id">631782921302-l4qosmm8am4l5f5b962r5aek7iaam9a8.apps.googleusercontent.com</string>
     <string name="sign_up_with_google">Sign up with Google</string>
     <string name="all_karam">All karam</string>
+    <string name="new_karam">New Karam</string>
+    <string name="icon_literal">Icon</string>
+    <string name="color_literal">Color</string>
 </resources>
