@@ -7,11 +7,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,13 +34,14 @@ fun IconsGrid(
     onIconSelect: (String) -> Unit
 ) {
 
-    LazyHorizontalGrid(
+    LazyVerticalGrid(
         modifier = modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(16.dp),
-        rows = GridCells.Fixed(3)
+        contentPadding = PaddingValues(8.dp),
+        columns = GridCells.Adaptive(50.dp)
     ) {
         items(AllTaskIcons) { iconName ->
             IconItem(
+                modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
                 iconName = iconName,
                 selected = selectedIcon == iconName,
                 onIconClick = { onIconSelect(it) }
@@ -46,11 +51,16 @@ fun IconsGrid(
 }
 
 @Composable
-fun IconItem(iconName: String, selected: Boolean, onIconClick: (String) -> Unit) {
+fun IconItem(
+    modifier: Modifier = Modifier,
+    iconName: String,
+    selected: Boolean,
+    onIconClick: (String) -> Unit
+) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .size(48.dp)
-            .clip(CircleShape)
+            .clip(RoundedCornerShape(8.dp))
             .background(Color.Gray)
             .border(
                 width = if (selected) 1.dp else 0.dp,
@@ -61,8 +71,9 @@ fun IconItem(iconName: String, selected: Boolean, onIconClick: (String) -> Unit)
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(id = fetchIcon(iconName)),
+            painter = painterResource(fetchIcon(iconName)),
             contentDescription = null,
+            modifier = Modifier.size(24.dp)
         )
     }
 }

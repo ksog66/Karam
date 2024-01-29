@@ -7,9 +7,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
@@ -32,13 +34,14 @@ fun ColorsGrid(
     onColorSelect: (String) -> Unit
 ) {
 
-    LazyHorizontalGrid(
+    LazyVerticalGrid(
         modifier = modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(16.dp),
-        rows = GridCells.Fixed(3)
+        contentPadding = PaddingValues(8.dp),
+        columns = GridCells.Adaptive(48.dp)
     ) {
         items(karamColors) { color ->
             ColorItem(
+                modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
                 color = color.value,
                 selected = selectedColor == color.value,
                 onColorClick = { onColorSelect(it) }
@@ -48,23 +51,26 @@ fun ColorsGrid(
 }
 
 @Composable
-fun ColorItem(color: String, selected: Boolean, onColorClick: (String) -> Unit) {
+fun ColorItem(
+    modifier: Modifier = Modifier,
+    color: String,
+    selected: Boolean,
+    onColorClick: (String) -> Unit
+) {
     Box(
-        modifier = Modifier
-            .size(48.dp)
+        modifier = modifier
+            .size(40.dp)
             .clip(CircleShape)
+            .clickable { onColorClick(color) }
             .background(Color(AColor.parseColor(color)))
             .border(
                 width = if (selected) 1.dp else 0.dp,
                 shape = RectangleShape,
                 color = Color.Black
             )
-            .clickable { onColorClick(color) },
+            .padding(8.dp),
         contentAlignment = Alignment.Center
     ) {
-        Image(
-            painter = painterResource(id = fetchIcon(color)),
-            contentDescription = null,
-        )
+
     }
 }

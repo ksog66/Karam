@@ -93,7 +93,9 @@ fun KaramNavHost(
         }
 
         composable(route = KaramScreens.CreateTask.route) {
-            CreateTaskRoute(modifier)
+            CreateTaskRoute(modifier) {
+                navHost.navigateUp()
+            }
         }
 
         composable(route = KaramScreens.Tasklogs.route) {

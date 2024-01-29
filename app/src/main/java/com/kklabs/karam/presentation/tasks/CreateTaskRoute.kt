@@ -35,8 +35,14 @@ import com.kklabs.karam.presentation.components.TextH40
 import com.kklabs.karam.util.TaskIcons.AllTaskIcons
 
 @Composable
-fun CreateTaskRoute(modifier: Modifier = Modifier) {
-
+fun CreateTaskRoute(
+    modifier: Modifier = Modifier,
+    navigateBack: () -> Unit
+) {
+    CreateTaskScreen(
+        modifier = modifier,
+        navigateBack = navigateBack
+    )
 }
 
 @Composable
@@ -47,7 +53,7 @@ fun CreateTaskScreen(
     val taskName = rememberSaveable { mutableStateOf("") }
     val selectedIcon = rememberSaveable { mutableStateOf(AllTaskIcons.first()) }
     val selectedColor = rememberSaveable { mutableStateOf(karamColors.first().value) }
-    
+
     Column(modifier = modifier.fillMaxSize()) {
         Row(modifier = Modifier.fillMaxWidth()) {
             IconButton(
