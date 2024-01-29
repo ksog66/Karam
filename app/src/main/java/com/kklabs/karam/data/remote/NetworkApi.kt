@@ -18,7 +18,7 @@ import retrofit2.http.Query
 interface NetworkApi {
 
     @GET("/api/v1/home")
-    suspend fun getHomeData(@Query(Keys.YEAR) year: String): NetworkResponse<HomeDataResponse>
+    suspend fun getHomeData(@Query(Keys.YEAR) year: Int): NetworkResponse<HomeDataResponse>
 
     @POST("/api/v1/user/")
     suspend fun createUser(

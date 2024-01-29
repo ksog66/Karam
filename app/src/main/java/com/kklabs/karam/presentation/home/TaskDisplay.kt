@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,10 +17,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -49,21 +53,26 @@ fun TaskDisplay(
     modifier: Modifier = Modifier,
     task: TasksKaram?,
     type: TaskDisplayType,
-    tasklogs: Map<Long, Int>
+    selectedYear: Int?,
+    tasklogs: Map<Long, Int>,
+    onLogClick: () -> Unit = {},
+    onSelectYearClick: () -> Unit = {}
 ) {
     val isIndividual = type == TaskDisplayType.INDIVIDUAL
-    val title = when(type) {
+    val title = when (type) {
         TaskDisplayType.CUMULATIVE -> {
             stringResource(id = R.string.all_karam)
         }
+
         TaskDisplayType.INDIVIDUAL -> {
             task!!.name
         }
     }
-    val baseColor = when(type) {
+    val baseColor = when (type) {
         TaskDisplayType.CUMULATIVE -> {
             "#28a745"
         }
+
         TaskDisplayType.INDIVIDUAL -> {
             task!!.color
         }
@@ -83,7 +92,11 @@ fun TaskDisplay(
                 .padding(vertical = 8.dp)
                 .zIndex(100f)
         ) {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Row(
                     modifier = Modifier.padding(horizontal = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -100,24 +113,48 @@ fun TaskDisplay(
                         )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
-                    TextH20(text = title )
+                    TextH20(text = title)
                 }
                 if (isIndividual) {
                     Button(
-                        onClick = { /* Handle log click */ },
+                        onClick = onLogClick,
                         modifier = Modifier
                             .padding(horizontal = 8.dp, vertical = 2.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Black
-                        )
+                        ),
+                        shape = RoundedCornerShape(8.dp)
                     ) {
                         TextH50(text = "Log", color = Color.White)
+                    }
+                } else {
+                    Button(
+                        onClick = onSelectYearClick,
+                        modifier = Modifier
+                            .padding(vertical = 2.dp, horizontal = 8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Blue
+                        ),
+                        contentPadding = PaddingValues(start = 12.dp, bottom = 8.dp, top = 8.dp, end = 8.dp),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        TextH50(
+                            text = selectedYear.toString(), color = Color.White
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Icon(
+                            imageVector = Icons.Filled.ArrowDropDown,
+                            contentDescription = null,
+                            tint = Color.White
+                        )
                     }
                 }
             }
             Spacer(modifier = Modifier.height(4.dp))
             Heatmap(
-                modifier = Modifier.fillMaxWidth().padding(start = 8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp),
                 data = tasklogs,
                 baseColor = baseColor
             )
@@ -147,6 +184,12 @@ fun TaskDisplayPreview() {
             "Gym"
         )
 
-        TaskDisplay(task = task, tasklogs = testData, type = TaskDisplayType.INDIVIDUAL)
+        TaskDisplay(
+            task = task,
+            tasklogs = testData,
+            type = TaskDisplayType.INDIVIDUAL,
+            selectedYear = null,
+            onLogClick = {}
+        ) {}
     }
 }

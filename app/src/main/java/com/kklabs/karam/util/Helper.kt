@@ -1,7 +1,9 @@
 package com.kklabs.karam.util
 
 import android.graphics.Color
+import android.os.Build
 import androidx.annotation.DrawableRes
+import androidx.annotation.RequiresApi
 import androidx.core.graphics.ColorUtils
 import com.kklabs.karam.R
 import com.kklabs.karam.util.TaskIcons.ALARM
@@ -37,6 +39,16 @@ fun generateCommitColor(commitCount: Int, baseColor: String): Int {
         in 3..4 -> ColorUtils.blendARGB(baseColorInt, Color.WHITE, 0.4f) // Light shade
         in 5..6 -> ColorUtils.blendARGB(baseColorInt, Color.WHITE, 0.6f) // Less light shade
         else -> baseColorInt
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun generateYearList(startYear: Int): List<Int> {
+    val currentYear = java.time.Year.now().value
+    return if (startYear == currentYear) {
+        listOf(startYear)
+    } else {
+        (startYear..currentYear).toList()
     }
 }
 

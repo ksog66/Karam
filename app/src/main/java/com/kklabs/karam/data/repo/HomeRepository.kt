@@ -11,7 +11,7 @@ class HomeRepository @Inject constructor(
     private val dataSource: DataSource
 ) {
 
-    suspend fun getHomeData(year: String): NetworkResponse<HomeDataResponse> {
+    suspend fun getHomeData(year: Int): NetworkResponse<HomeDataResponse> {
         return dataSource.getHomeData(year)
     }
 }

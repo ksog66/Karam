@@ -1,7 +1,13 @@
 package com.kklabs.karam.presentation.home
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,30 +26,65 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kklabs.karam.R
 import com.kklabs.karam.data.remote.response.TasksKaram
 import com.kklabs.karam.presentation.components.Heatmap
 import com.kklabs.karam.presentation.components.TextH10
+import com.kklabs.karam.presentation.components.TextH20
+import com.kklabs.karam.util.generateYearList
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeRoute(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
-    onNewTaskClick: () -> Unit
+    userCreatedYear: Int,
+    onNewTaskClick: () -> Unit,
+    onLogClick: (Int) -> Unit
 ) {
-    val selectedYear = mutableStateOf("2023")
+    val yearRange = remember {
+        generateYearList(userCreatedYear).asReversed()
+    }
+    var selectedYear by remember {mutableStateOf(yearRange.first())}
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val forceFetch by rememberSaveable { mutableStateOf(false) }
-    LaunchedEffect(selectedYear.value) {
+    var forceFetch by rememberSaveable { mutableStateOf(false) }
+
+    var showYearSelectionDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(selectedYear) {
         if (uiState !is HomeFeedUiState.Success || forceFetch) {
-            viewModel.getHomeData(selectedYear.value)
+            viewModel.getHomeData(selectedYear)
+            forceFetch = false
         }
+    }
+
+    if (showYearSelectionDialog) {
+        Dialog(
+            onDismissRequest = { showYearSelectionDialog = false},
+            properties = DialogProperties(usePlatformDefaultWidth = false)
+        ) {
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = Color.LightGray
+            ) {
+                YearSelection(selectedYear = selectedYear, yearRange = yearRange) {
+                    forceFetch = true
+                    showYearSelectionDialog = false
+                    selectedYear = it
+                }
+            }
+        }
+
     }
 
     when (uiState) {
@@ -61,7 +102,12 @@ fun HomeRoute(
                 modifier = modifier,
                 cumulativeLogcount = data.cumulativeKaram,
                 tasksKaram = data.tasksKaram,
-                onNewTaskClick = onNewTaskClick
+                onNewTaskClick = onNewTaskClick,
+                selectedYear = selectedYear,
+                onLogClick = onLogClick,
+                onSelectYearClick = {
+                    showYearSelectionDialog = true
+                }
             )
         }
     }
@@ -72,7 +118,10 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     cumulativeLogcount: Map<Long, Int>,
     tasksKaram: List<TasksKaram>,
-    onNewTaskClick: () -> Unit
+    onNewTaskClick: () -> Unit,
+    selectedYear: Int,
+    onSelectYearClick: () -> Unit,
+    onLogClick: (Int) -> Unit
 ) {
     Scaffold(
         modifier = modifier,
@@ -100,7 +149,9 @@ fun HomeScreen(
                 TaskDisplay(
                     task = null,
                     type = TaskDisplayType.CUMULATIVE,
-                    tasklogs = cumulativeLogcount
+                    tasklogs = cumulativeLogcount,
+                    selectedYear = selectedYear,
+                    onSelectYearClick = onSelectYearClick
                 )
             }
             this.items(
@@ -110,7 +161,11 @@ fun HomeScreen(
                 TaskDisplay(
                     task = taskItem,
                     type = TaskDisplayType.INDIVIDUAL,
-                    tasklogs = taskItem.karam
+                    tasklogs = taskItem.karam,
+                    selectedYear = null,
+                    onLogClick = {
+                        onLogClick(taskItem.id)
+                    }
                 )
             }
         }
@@ -127,5 +182,34 @@ fun HomeAppBar(
         color = Color.White
     ) {
         TextH10(text = stringResource(id = R.string.app_name))
+    }
+}
+
+@Composable
+fun YearSelection(
+    modifier: Modifier = Modifier,
+    selectedYear: Int,
+    yearRange: List<Int>,
+    onSelectYear: (Int) -> Unit
+) {
+    LazyColumn(modifier = modifier) {
+        this.items(
+            yearRange,
+            key = { year -> year }
+        ) { year ->
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onSelectYear(year) }
+                    .padding(4.dp)
+                    .background(if (year == selectedYear) Color.Blue else Color.White)
+                    .padding(8.dp)
+            ) {
+                TextH20(
+                    text = year.toString(),
+                    color = if (year == selectedYear) Color.White else Color.Black
+                )
+            }
+        }
     }
 }

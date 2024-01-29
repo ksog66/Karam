@@ -1,5 +1,6 @@
 package com.kklabs.karam.presentation.home
 
+import com.kklabs.karam.data.ds.ConfigPreferences
 import com.kklabs.karam.data.remote.NetworkResponse
 import com.kklabs.karam.data.remote.response.HomeDataResponse
 import com.kklabs.karam.data.repo.HomeRepository
@@ -12,13 +13,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val homeRepository: HomeRepository
+    private val homeRepository: HomeRepository,
+    private val configPreferences: ConfigPreferences
 ) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow<HomeFeedUiState>(HomeFeedUiState.Loading)
     val uiState: StateFlow<HomeFeedUiState> = _uiState
 
-    suspend fun getHomeData(year: String) = launchIO({
+    suspend fun getHomeData(year: Int) = launchIO({
 
     }) {
         try {

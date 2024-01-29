@@ -1,5 +1,7 @@
 package com.kklabs.karam.presentation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -24,13 +26,16 @@ import com.kklabs.karam.presentation.navigation.KaramScreens
 import com.kklabs.karam.presentation.tasklogs.TasklogsRoute
 import com.kklabs.karam.presentation.tasks.CreateTaskRoute
 import com.kklabs.karam.presentation.welcome.WelcomeRoute
+import java.time.LocalDate
+import java.util.Calendar
+import java.util.Date
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun KaramApp(modifier: Modifier = Modifier, googleAuthUiClient: GoogleAuthUiClient) {
 
     Surface(
-        modifier = modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+        modifier = modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
     ) {
         val navController = rememberNavController()
 
@@ -44,6 +49,7 @@ fun KaramApp(modifier: Modifier = Modifier, googleAuthUiClient: GoogleAuthUiClie
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun KaramNavHost(
     modifier: Modifier = Modifier,
@@ -52,6 +58,12 @@ fun KaramNavHost(
 ) {
     val mainViewModel: MainViewModel = hiltViewModel()
     val existingUser by mainViewModel.existingUser.collectAsStateWithLifecycle()
+
+    val userCreatedYear = existingUser?.dateCreated?.let { date ->
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+        calendar.get(Calendar.YEAR)
+    } ?: Calendar.getInstance().get(Calendar.YEAR)
 
     NavHost(
         navController = navHost,
@@ -68,9 +80,16 @@ fun KaramNavHost(
         }
 
         composable(route = KaramScreens.Home.route) {
-            HomeRoute(modifier) {
-                navHost.navigate(KaramScreens.CreateTask.route)
-            }
+            HomeRoute(
+                modifier = modifier,
+                userCreatedYear = userCreatedYear,
+                onLogClick = {
+
+                },
+                onNewTaskClick = {
+                    navHost.navigate(KaramScreens.CreateTask.route)
+                }
+            )
         }
 
         composable(route = KaramScreens.CreateTask.route) {

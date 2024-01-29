@@ -14,7 +14,7 @@ import com.kklabs.karam.domain.model.User
 
 interface DataSource {
 
-    suspend fun getHomeData(year: String): NetworkResponse<HomeDataResponse>
+    suspend fun getHomeData(year: Int): NetworkResponse<HomeDataResponse>
 
     suspend fun createUser(request: CreateUserRequest): NetworkResponse<UserResponse>
 
