@@ -61,12 +61,12 @@ fun IconItem(
         modifier = modifier
             .size(48.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(Color.Gray)
             .border(
-                width = if (selected) 1.dp else 0.dp,
-                shape = RectangleShape,
+                width = if (selected) 2.dp else 0.dp,
+                shape = RoundedCornerShape(8.dp),
                 color = Color.Black
             )
+            .background(Color.Gray)
             .clickable { onIconClick(iconName) },
         contentAlignment = Alignment.Center
     ) {

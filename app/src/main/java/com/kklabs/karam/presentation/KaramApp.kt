@@ -75,7 +75,11 @@ fun KaramNavHost(
 
         composable(route = KaramScreens.LoginScreen.route) {
             AuthRoute(modifier, googleAuthUiClient) {
-                navHost.navigate(KaramScreens.Home.route)
+                navHost.navigate(
+                    route = KaramScreens.Home.route,
+                    navOptions = NavOptions.Builder()
+                        .setPopUpTo(KaramScreens.LoginScreen.route, true).build()
+                )
             }
         }
 

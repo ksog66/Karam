@@ -62,12 +62,12 @@ fun ColorItem(
             .size(40.dp)
             .clip(CircleShape)
             .clickable { onColorClick(color) }
-            .background(Color(AColor.parseColor(color)))
             .border(
-                width = if (selected) 1.dp else 0.dp,
-                shape = RectangleShape,
+                width = if (selected) 2.dp else 0.dp,
+                shape = CircleShape,
                 color = Color.Black
             )
+            .background(Color(AColor.parseColor(color)))
             .padding(8.dp),
         contentAlignment = Alignment.Center
     ) {

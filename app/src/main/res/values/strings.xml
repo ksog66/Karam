@@ -11,4 +11,7 @@
     <string name="new_karam">New Karam</string>
     <string name="icon_literal">Icon</string>
     <string name="color_literal">Color</string>
+    <string name="add_karam">Add Karam</string>
+    <string name="task_name_is_empty">Task name is empty</string>
+    <string name="task_created_successfully">Task created successfully</string>
 </resources>
