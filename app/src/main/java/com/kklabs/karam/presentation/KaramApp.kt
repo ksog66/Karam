@@ -21,6 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import com.kklabs.karam.MainViewModel
 import com.kklabs.karam.presentation.auth.AuthRoute
 import com.kklabs.karam.presentation.auth.GoogleAuthUiClient
+import com.kklabs.karam.presentation.home.FORCE_FETCH_HOME_FEED_KEY
 import com.kklabs.karam.presentation.home.HomeRoute
 import com.kklabs.karam.presentation.navigation.KaramScreens
 import com.kklabs.karam.presentation.tasklogs.TasklogsRoute
@@ -84,12 +85,15 @@ fun KaramNavHost(
         }
 
         composable(route = KaramScreens.Home.route) {
+            val forceFetchHomeFeed =
+                it.savedStateHandle.get<Boolean>(FORCE_FETCH_HOME_FEED_KEY) ?: false
             HomeRoute(
                 modifier = modifier,
                 userCreatedYear = userCreatedYear,
                 onLogClick = {
-
+                    navHost.navigate(KaramScreens.Tasklogs.route)
                 },
+                forceFetchFeed = forceFetchHomeFeed,
                 onNewTaskClick = {
                     navHost.navigate(KaramScreens.CreateTask.route)
                 }
@@ -98,6 +102,10 @@ fun KaramNavHost(
 
         composable(route = KaramScreens.CreateTask.route) {
             CreateTaskRoute(modifier) {
+                navHost.previousBackStackEntry?.savedStateHandle?.set<Boolean>(
+                    FORCE_FETCH_HOME_FEED_KEY,
+                    it
+                )
                 navHost.navigateUp()
             }
         }

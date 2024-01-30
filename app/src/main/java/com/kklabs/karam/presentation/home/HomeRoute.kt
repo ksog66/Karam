@@ -46,10 +46,12 @@ import com.kklabs.karam.presentation.components.TextH10
 import com.kklabs.karam.presentation.components.TextH20
 import com.kklabs.karam.util.generateYearList
 
+const val FORCE_FETCH_HOME_FEED_KEY = "forceFetchHomeFeedKey"
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeRoute(
     modifier: Modifier = Modifier,
+    forceFetchFeed: Boolean,
     viewModel: HomeViewModel = hiltViewModel(),
     userCreatedYear: Int,
     onNewTaskClick: () -> Unit,
@@ -61,11 +63,11 @@ fun HomeRoute(
     var selectedYear by remember { mutableStateOf(yearRange.first()) }
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var forceFetch by rememberSaveable { mutableStateOf(false) }
+    var forceFetch by remember { mutableStateOf(forceFetchFeed) }
 
     var showYearSelectionDialog by remember { mutableStateOf(false) }
 
-    LaunchedEffect(selectedYear) {
+    LaunchedEffect(selectedYear, forceFetch) {
         if (uiState !is HomeFeedUiState.Success || forceFetch) {
             viewModel.getHomeData(selectedYear)
             forceFetch = false
