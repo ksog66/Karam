@@ -47,6 +47,7 @@ import com.kklabs.karam.presentation.components.TextH20
 import com.kklabs.karam.util.generateYearList
 
 const val FORCE_FETCH_HOME_FEED_KEY = "forceFetchHomeFeedKey"
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeRoute(
@@ -138,7 +139,7 @@ fun HomeScreen(
             HomeAppBar(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(vertical = 12.dp, horizontal = 12.dp)
+                    .padding(vertical = 12.dp)
             )
         },
         floatingActionButton = {
@@ -190,7 +191,10 @@ fun HomeAppBar(
             .fillMaxWidth(),
         color = Color.White
     ) {
-        TextH10(text = stringResource(id = R.string.app_name))
+        TextH10(
+            modifier = Modifier.padding(horizontal = 12.dp),
+            text = stringResource(id = R.string.app_name)
+        )
     }
 }
 

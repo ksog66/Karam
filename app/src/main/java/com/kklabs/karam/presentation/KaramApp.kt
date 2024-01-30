@@ -111,7 +111,11 @@ fun KaramNavHost(
         }
 
         composable(route = KaramScreens.Tasklogs.route) {
-            TasklogsRoute(modifier)
+            TasklogsRoute(
+                modifier = modifier,
+                taskId = 1,
+                taskName = "Coding"
+            )
         }
     }
 }

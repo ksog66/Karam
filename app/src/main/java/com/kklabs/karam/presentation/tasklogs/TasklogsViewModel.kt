@@ -1,17 +1,35 @@
 package com.kklabs.karam.presentation.tasklogs
 
+import android.util.Log
+import com.kklabs.karam.data.mapper.toLogDateViewData
+import com.kklabs.karam.data.mapper.toTasklogViewData
+import com.kklabs.karam.data.remote.NetworkResponse
 import com.kklabs.karam.data.remote.request.CreateTasklogRequest
+import com.kklabs.karam.data.remote.response.DataResponse
+import com.kklabs.karam.data.remote.response.LogDate
+import com.kklabs.karam.data.remote.response.LogEntity
+import com.kklabs.karam.data.remote.response.ModuleData
+import com.kklabs.karam.data.remote.response.TasklogResponse
 import com.kklabs.karam.data.repo.TasklogsRepository
+import com.kklabs.karam.domain.model.TasklogsComponentViewData
 import com.kklabs.karam.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
+
+private const val TAG = "TasklogsViewModel"
 
 @HiltViewModel
 class TasklogsViewModel @Inject constructor(
     private val tasklogsRepository: TasklogsRepository
 ) : BaseViewModel() {
 
-    private var currentPaginationKey: String? = null
+    private val _uiState = MutableStateFlow<TasklogsUiState>(TasklogsUiState())
+    val uiState: StateFlow<TasklogsUiState> = _uiState
+
+    private var currentPaginationKey: Int? = 0
 
     suspend fun createTasklogs(request: CreateTasklogRequest) = launchIO({
 
@@ -19,9 +37,54 @@ class TasklogsViewModel @Inject constructor(
 
     }
 
-    suspend fun getTasklogs(taskId: Long) = launchIO({
+    fun getTasklogs(taskId: Long) = launchIO({
 
     }) {
+        try {
+            when (val res = tasklogsRepository.getTasklogs(
+                taskId,
+                currentPaginationKey
+            ) as NetworkResponse<DataResponse<List<ModuleData<LogEntity>>>>) {
+                is NetworkResponse.Error -> {
+                    _uiState.update { currentState ->
+                        currentState.copy(errorMessage = res.body.message)
+                    }
+                }
+
+                is NetworkResponse.Success -> {
+                    val tasklogsList = mutableListOf<TasklogsComponentViewData>()
+                    tasklogsList.addAll(_uiState.value.feed)
+                    res.successBody.data.forEach { moduleData ->
+                        when (moduleData.moduleId) {
+                            "task_logs" -> {
+                                val taskLog =
+                                    (moduleData.data as TasklogResponse).toTasklogViewData()
+                                tasklogsList.add(taskLog)
+                            }
+
+                            "log_date" -> {
+                                val logDate = (moduleData.data as LogDate).toLogDateViewData()
+                                tasklogsList.add(logDate)
+                            }
+                        }
+                    }
+                    _uiState.update { currentState ->
+                        currentState.copy(feed = tasklogsList)
+                    }
+                    currentPaginationKey = res.successBody.paginationKey
+                }
+            }
+        } catch (e: Exception) {
+            _uiState.update { currentState ->
+                currentState.copy(errorMessage = e.message)
+            }
+        }
 
     }
 }
+
+data class TasklogsUiState(
+    val feed: List<TasklogsComponentViewData> = emptyList(),
+    val errorMessage: String? = null,
+    val isLoading: Boolean = false
+)

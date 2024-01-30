@@ -19,9 +19,11 @@ data class TasklogResponse(
     val type: String,
     @Json(name = "user_id")
     val userId: Int
-)
+) : LogEntity()
 
 @JsonClass(generateAdapter = true)
 data class LogDate(
     val date: Long
-)
+) : LogEntity()
+
+abstract class LogEntity
