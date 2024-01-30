@@ -43,7 +43,7 @@ interface NetworkApi {
 
     @GET("/api/v1/tasklog")
     suspend fun getTasklogs(
-        @Query(Keys.TASK_ID) taskId: Long,
+        @Query(Keys.TASK_ID) taskId: Int,
         @Query(Keys.PAGE_KEY) pageKey: Int? = null
     ): NetworkResponse<DataResponse<List<ModuleData<*>>>>
 }

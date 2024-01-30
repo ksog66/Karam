@@ -1,6 +1,7 @@
 package com.kklabs.karam.presentation.tasklogs
 
 import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import com.kklabs.karam.data.mapper.toLogDateViewData
 import com.kklabs.karam.data.mapper.toTasklogViewData
 import com.kklabs.karam.data.remote.NetworkResponse
@@ -13,6 +14,7 @@ import com.kklabs.karam.data.remote.response.TasklogResponse
 import com.kklabs.karam.data.repo.TasklogsRepository
 import com.kklabs.karam.domain.model.TasklogsComponentViewData
 import com.kklabs.karam.presentation.base.BaseViewModel
+import com.kklabs.karam.presentation.navigation.TASK_ID_KEY
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,13 +25,27 @@ private const val TAG = "TasklogsViewModel"
 
 @HiltViewModel
 class TasklogsViewModel @Inject constructor(
-    private val tasklogsRepository: TasklogsRepository
+    private val tasklogsRepository: TasklogsRepository,
+    savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
+
+    private val taskId: Int? = savedStateHandle[TASK_ID_KEY]
 
     private val _uiState = MutableStateFlow<TasklogsUiState>(TasklogsUiState())
     val uiState: StateFlow<TasklogsUiState> = _uiState
 
     private var currentPaginationKey: Int? = 0
+
+
+    init {
+        if (taskId != null) {
+            getTasklogs(taskId)
+        } else {
+            _uiState.update { currentState ->
+                currentState.copy(isTaskIdValid = false)
+            }
+        }
+    }
 
     suspend fun createTasklogs(request: CreateTasklogRequest) = launchIO({
 
@@ -37,7 +53,7 @@ class TasklogsViewModel @Inject constructor(
 
     }
 
-    fun getTasklogs(taskId: Long) = launchIO({
+    fun getTasklogs(taskId: Int) = launchIO({
 
     }) {
         try {
@@ -86,5 +102,6 @@ class TasklogsViewModel @Inject constructor(
 data class TasklogsUiState(
     val feed: List<TasklogsComponentViewData> = emptyList(),
     val errorMessage: String? = null,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val isTaskIdValid: Boolean = true
 )

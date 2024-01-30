@@ -1,5 +1,8 @@
 package com.kklabs.karam.presentation.navigation
 
+const val TASK_ID_KEY = "task_id"
+const val TASK_NAME_KEY = "task_name"
+
 sealed class KaramScreens(val route: String) {
 
     object Welcome : KaramScreens(route = "welcome_screen")
@@ -10,5 +13,12 @@ sealed class KaramScreens(val route: String) {
 
     object CreateTask : KaramScreens(route = "create_task")
 
-    object Tasklogs : KaramScreens(route = "task_logs")
+    object Tasklogs : KaramScreens(route = "task_logs?task_id={$TASK_ID_KEY}&task_name={$TASK_NAME_KEY}") {
+        fun passTaskNameAndId(
+            name: String,
+            id: Int
+        ): String {
+            return "task_logs?task_id=$id&task_name=$name"
+        }
+    }
 }

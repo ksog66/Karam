@@ -15,15 +15,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.kklabs.karam.MainViewModel
 import com.kklabs.karam.presentation.auth.AuthRoute
 import com.kklabs.karam.presentation.auth.GoogleAuthUiClient
 import com.kklabs.karam.presentation.home.FORCE_FETCH_HOME_FEED_KEY
 import com.kklabs.karam.presentation.home.HomeRoute
 import com.kklabs.karam.presentation.navigation.KaramScreens
+import com.kklabs.karam.presentation.navigation.TASK_ID_KEY
+import com.kklabs.karam.presentation.navigation.TASK_NAME_KEY
 import com.kklabs.karam.presentation.tasklogs.TasklogsRoute
 import com.kklabs.karam.presentation.tasks.CreateTaskRoute
 import com.kklabs.karam.presentation.welcome.WelcomeRoute
@@ -90,8 +94,10 @@ fun KaramNavHost(
             HomeRoute(
                 modifier = modifier,
                 userCreatedYear = userCreatedYear,
-                onLogClick = {
-                    navHost.navigate(KaramScreens.Tasklogs.route)
+                onLogClick = { name, id ->
+                    navHost.navigate(
+                        KaramScreens.Tasklogs.passTaskNameAndId(name, id)
+                    )
                 },
                 forceFetchFeed = forceFetchHomeFeed,
                 onNewTaskClick = {
@@ -110,11 +116,17 @@ fun KaramNavHost(
             }
         }
 
-        composable(route = KaramScreens.Tasklogs.route) {
+        composable(
+            route = KaramScreens.Tasklogs.route,
+            arguments = listOf(navArgument(TASK_ID_KEY) { type = NavType.IntType },
+                navArgument(TASK_NAME_KEY) { type = NavType.StringType })
+        ) {
             TasklogsRoute(
                 modifier = modifier,
-                taskId = 1,
-                taskName = "Coding"
+                taskName = "Coding",
+                navigateBack = {
+                    navHost.navigateUp()
+                }
             )
         }
     }

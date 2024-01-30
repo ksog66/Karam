@@ -14,7 +14,7 @@ class TasklogsRepository @Inject constructor(
     private val dataSource: DataSource
 ) {
 
-    suspend fun getTasklogs(taskId: Long, pageKey: Int?): NetworkResponse<DataResponse<List<ModuleData<*>>>> {
+    suspend fun getTasklogs(taskId: Int, pageKey: Int?): NetworkResponse<DataResponse<List<ModuleData<*>>>> {
         return dataSource.getTasklogs(taskId, pageKey)
     }
 

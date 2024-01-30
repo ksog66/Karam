@@ -93,7 +93,7 @@ class RemoteDataSource @Inject constructor(
     }
 
     override suspend fun getTasklogs(
-        taskId: Long,
+        taskId: Int,
         pageKey: Int?
     ): NetworkResponse<DataResponse<List<ModuleData<*>>>> {
         return when (val res = api.getTasklogs(taskId, pageKey)) {

@@ -27,7 +27,7 @@ interface DataSource {
     suspend fun createTasklog(request: CreateTasklogRequest): NetworkResponse<TasklogResponse>
 
     suspend fun getTasklogs(
-        taskId: Long,
+        taskId: Int,
         pageKey: Int? = null
     ): NetworkResponse<DataResponse<List<ModuleData<*>>>>
 
