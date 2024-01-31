@@ -107,6 +107,9 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.constraintCompose)
 
+    implementation(libs.paging.runtime)
+    implementation(libs.paging.compose)
+
     //network logger
     debugImplementation(libs.chucker.debug)
     releaseImplementation(libs.chucker.release)

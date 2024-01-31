@@ -13,9 +13,12 @@ import androidx.compose.ui.unit.sp
 import com.kklabs.karam.domain.model.TasklogsComponentViewData
 
 @Composable
-fun TasklogsComponent(data: TasklogsComponentViewData.TasklogViewData) {
+fun TasklogsComponent(
+    modifier: Modifier = Modifier,
+    data: TasklogsComponentViewData.TasklogViewData
+) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .padding(8.dp)
             .background(Color.Green, MaterialTheme.shapes.medium)
             .padding(12.dp)

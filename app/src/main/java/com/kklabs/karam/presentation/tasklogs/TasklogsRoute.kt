@@ -1,34 +1,30 @@
 package com.kklabs.karam.presentation.tasklogs
 
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.kklabs.karam.domain.model.TasklogsComponentViewData
 import com.kklabs.karam.presentation.components.LogDateComponent
 import com.kklabs.karam.presentation.components.TasklogsComponent
 import com.kklabs.karam.presentation.components.TextH20
-import com.kklabs.karam.util.showShortToast
 
 @Composable
 fun TasklogsRoute(
@@ -37,30 +33,19 @@ fun TasklogsRoute(
     navigateBack: () -> Unit,
     viewModel: TasklogsViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
+    val tasklogsList = viewModel.tasklogsPager.collectAsLazyPagingItems()
 
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(key1 = uiState.errorMessage) {
-        uiState.errorMessage?.let { message ->
-            showShortToast(context, message)
-        }
-    }
-
-    LaunchedEffect(key1 = uiState.isTaskIdValid) {
-        if (!uiState.isTaskIdValid) {
-            showShortToast(context, "Taskid Invalid")
-            navigateBack()
-        }
-    }
-
-    TasklogsScreen(modifier = modifier.fillMaxSize(), uiState.feed.asReversed(), taskName = taskName)
+    TasklogsScreen(
+        modifier = modifier.fillMaxSize(),
+        tasklogs = tasklogsList,
+        taskName = taskName
+    )
 }
 
 @Composable
 fun TasklogsScreen(
     modifier: Modifier = Modifier,
-    feed: List<TasklogsComponentViewData>,
+    tasklogs: LazyPagingItems<TasklogsComponentViewData>,
     taskName: String
 ) {
     Scaffold(
@@ -70,15 +55,35 @@ fun TasklogsScreen(
         }
     ) { paddingValues ->
         LazyColumn(
-            modifier = modifier.padding(paddingValues)
+            modifier = modifier.padding(paddingValues),
+            reverseLayout = true
         ) {
-            this.items(feed) {feedItem ->
-                when (feedItem) {
+            items(
+                count = tasklogs.itemCount,
+                contentType = tasklogs.itemContentType {
+                    "TasklogsComponentViewData"
+                }
+            ) { index: Int ->
+                when (val feedItem = tasklogs[index]) {
                     is TasklogsComponentViewData.LogDateViewData -> {
-                        LogDateComponent(logDateData = feedItem)
+                        Column {
+                            LogDateComponent(
+                                modifier = Modifier.align(Alignment.End),
+                                logDateData = feedItem
+                            )
+                        }
                     }
+
                     is TasklogsComponentViewData.TasklogViewData -> {
-                        TasklogsComponent(data = feedItem)
+                        Column {
+                            TasklogsComponent(
+                                modifier = Modifier.align(Alignment.CenterHorizontally),
+                                data = feedItem
+                            )
+                        }
+                    }
+                    else -> {
+
                     }
                 }
             }

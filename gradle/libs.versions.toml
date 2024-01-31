@@ -23,6 +23,7 @@ chucker = "3.5.2"
 firebase-crashlytics = "2.9.9"
 constraintlayout = "2.1.4"
 constraintlayout-compose = "1.0.1"
+paging = "3.2.1"
 
 
 [libraries]
@@ -40,36 +41,39 @@ ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview
 ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 material3 = { group = "androidx.compose.material3", name = "material3" }
-moshi-codegen = { group = "com.squareup.moshi", name="moshi-kotlin-codegen", version.ref = "moshi"}
-moshi-kotlin = { group = "com.squareup.moshi", name="moshi-kotlin", version.ref = "moshi"}
-moshi-adapters = { group = "com.squareup.moshi", name = "moshi-adapters", version.ref = "moshi"}
-retrofit = { group = "com.squareup.retrofit2", name="retrofit", version.ref = "retrofit"}
-retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit"}
+moshi-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshi" }
+moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
+moshi-adapters = { group = "com.squareup.moshi", name = "moshi-adapters", version.ref = "moshi" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
 dagger-hiltAndroid = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger-hilt" }
 dagger-hiltCompiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "dagger-hilt" }
-androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore"}
+androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose" }
-firebaseBom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom"}
-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics"}
-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics"}
-firebase-auth = { group = "com.google.firebase", name = "firebase-auth"}
-playServicesAuth = {group = "com.google.android.gms", name = "play-services-auth", version.ref = "play-service-auth"}
+firebaseBom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
+playServicesAuth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "play-service-auth" }
 materialIcons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "material-compose" }
 materialIcons-core = { group = "androidx.compose.material", name = "material-icons-core-android", version.ref = "material-compose" }
 hilt-navigationCompose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "compose-hilt" }
-lifecycle-viewModelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle-runtime-ktx"}
-lifecycle-runtimeCompose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle-runtime-ktx"}
-chucker-debug = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chucker"}
-chucker-release = { group = "com.github.chuckerteam.chucker", name = "library-no-op", version.ref = "chucker"}
+lifecycle-viewModelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle-runtime-ktx" }
+lifecycle-runtimeCompose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle-runtime-ktx" }
+chucker-debug = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chucker" }
+chucker-release = { group = "com.github.chuckerteam.chucker", name = "library-no-op", version.ref = "chucker" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
-androidx-constraintCompose = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayout-compose"}
+androidx-constraintCompose = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayout-compose" }
+
+paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
+paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kspDevTool = {id = "com.google.devtools.ksp", version.ref = "ksp"}
+kspDevTool = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 daggerHilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger-hilt" }
-googleServices = { id = "com.google.gms.google-services", version.ref = "google-services"}
-firebaseCrashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics"}
+googleServices = { id = "com.google.gms.google-services", version.ref = "google-services" }
+firebaseCrashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
 [bundles]
 
