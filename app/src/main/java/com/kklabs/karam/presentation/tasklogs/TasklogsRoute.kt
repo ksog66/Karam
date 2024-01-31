@@ -78,22 +78,29 @@ fun TasklogsScreen(
             ) { index: Int ->
                 when (val feedItem = tasklogs[index]) {
                     is TasklogsComponentViewData.LogDateViewData -> {
-                        Column {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
                             LogDateComponent(
-                                modifier = Modifier.align(Alignment.End),
+                                modifier = Modifier.align(Alignment.CenterHorizontally),
                                 logDateData = feedItem
                             )
                         }
                     }
 
                     is TasklogsComponentViewData.TasklogViewData -> {
-                        Column {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
                             TasklogsComponent(
-                                modifier = Modifier.align(Alignment.CenterHorizontally),
+                                modifier = Modifier.align(Alignment.End),
                                 data = feedItem
                             )
                         }
                     }
+
                     else -> {
 
                     }
