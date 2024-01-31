@@ -6,11 +6,7 @@ import com.kklabs.karam.data.mapper.toLogDateViewData
 import com.kklabs.karam.data.mapper.toTasklogViewData
 import com.kklabs.karam.data.remote.NetworkResponse
 import com.kklabs.karam.data.remote.request.CreateTasklogRequest
-import com.kklabs.karam.data.remote.response.DataResponse
-import com.kklabs.karam.data.remote.response.LogDate
 import com.kklabs.karam.data.remote.response.LogEntity
-import com.kklabs.karam.data.remote.response.ModuleData
-import com.kklabs.karam.data.remote.response.TasklogResponse
 import com.kklabs.karam.data.repo.TasklogsRepository
 import com.kklabs.karam.domain.model.TasklogsComponentViewData
 import com.kklabs.karam.presentation.base.BaseViewModel
@@ -57,10 +53,7 @@ class TasklogsViewModel @Inject constructor(
 
     }) {
         try {
-            when (val res = tasklogsRepository.getTasklogs(
-                taskId,
-                currentPaginationKey
-            ) as NetworkResponse<DataResponse<List<ModuleData<LogEntity>>>>) {
+            when (val res = tasklogsRepository.getTasklogs(taskId, currentPaginationKey)) {
                 is NetworkResponse.Error -> {
                     _uiState.update { currentState ->
                         currentState.copy(errorMessage = res.body.message)
@@ -71,15 +64,18 @@ class TasklogsViewModel @Inject constructor(
                     val tasklogsList = mutableListOf<TasklogsComponentViewData>()
                     tasklogsList.addAll(_uiState.value.feed)
                     res.successBody.data.forEach { moduleData ->
+                        Log.d(TAG, """
+                            moduleData -> $moduleData
+                        """.trimIndent())
                         when (moduleData.moduleId) {
                             "task_logs" -> {
                                 val taskLog =
-                                    (moduleData.data as TasklogResponse).toTasklogViewData()
+                                    (moduleData.data as LogEntity.TasklogEntity).toTasklogViewData()
                                 tasklogsList.add(taskLog)
                             }
 
                             "log_date" -> {
-                                val logDate = (moduleData.data as LogDate).toLogDateViewData()
+                                val logDate = (moduleData.data as LogEntity.LogDateEntity).toLogDateViewData()
                                 tasklogsList.add(logDate)
                             }
                         }
@@ -91,6 +87,12 @@ class TasklogsViewModel @Inject constructor(
                 }
             }
         } catch (e: Exception) {
+            Log.e(
+                TAG,
+                """
+                errorMessage while fetching tasklogs-> ${e.message}
+            """.trimIndent(),
+            )
             _uiState.update { currentState ->
                 currentState.copy(errorMessage = e.message)
             }

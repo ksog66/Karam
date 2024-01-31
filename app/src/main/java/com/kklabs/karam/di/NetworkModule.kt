@@ -5,9 +5,13 @@ import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.kklabs.karam.BuildConfig
 import com.kklabs.karam.data.remote.NetworkApi
 import com.kklabs.karam.data.remote.CommonHeadersInterceptor
+import com.kklabs.karam.data.remote.response.LogEntity
+import com.kklabs.karam.data.remote.response.LogType
 import com.kklabs.karam.data.util.NetworkResponseAdapterFactory
 import com.kklabs.karam.data.util.adapter.CustomDateAdapter
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,6 +39,11 @@ object NetworkModule {
     fun provideMoshi(): Moshi {
         return Moshi.Builder()
             .add(CustomDateAdapter())
+            .add(PolymorphicJsonAdapterFactory.of(LogEntity::class.java, "log_type")
+                .withSubtype(LogEntity.TasklogEntity::class.java, LogType.TASK_LOG.mName)
+                .withSubtype(LogEntity.LogDateEntity::class.java, LogType.LOG_DATE.mName)
+            )
+            .add(KotlinJsonAdapterFactory())
             .build()
     }
 

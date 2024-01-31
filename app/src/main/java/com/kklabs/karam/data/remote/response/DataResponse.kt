@@ -9,5 +9,5 @@ import com.squareup.moshi.JsonClass
 data class DataResponse<T>(
     @Json(name = "page_key")
     val paginationKey: Int,
-    val data: List<ModuleData<*>>
+    val data: T
 )

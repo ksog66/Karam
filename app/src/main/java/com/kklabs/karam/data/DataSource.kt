@@ -6,11 +6,10 @@ import com.kklabs.karam.data.remote.request.CreateTasklogRequest
 import com.kklabs.karam.data.remote.request.CreateUserRequest
 import com.kklabs.karam.data.remote.response.DataResponse
 import com.kklabs.karam.data.remote.response.HomeDataResponse
+import com.kklabs.karam.data.remote.response.LogEntity
 import com.kklabs.karam.data.remote.response.ModuleData
 import com.kklabs.karam.data.remote.response.TaskResponse
-import com.kklabs.karam.data.remote.response.TasklogResponse
 import com.kklabs.karam.data.remote.response.UserResponse
-import com.kklabs.karam.domain.model.User
 
 interface DataSource {
 
@@ -24,11 +23,11 @@ interface DataSource {
 
     suspend fun getTasks(): NetworkResponse<Nothing>
 
-    suspend fun createTasklog(request: CreateTasklogRequest): NetworkResponse<TasklogResponse>
+    suspend fun createTasklog(request: CreateTasklogRequest): NetworkResponse<LogEntity.TasklogEntity>
 
     suspend fun getTasklogs(
         taskId: Int,
         pageKey: Int? = null
-    ): NetworkResponse<DataResponse<List<ModuleData<*>>>>
+    ): NetworkResponse<DataResponse<List<ModuleData<LogEntity>>>>
 
 }

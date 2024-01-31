@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.kklabs.karam.data.remote.response.LogDate
 import com.kklabs.karam.domain.model.TasklogsComponentViewData
 import java.text.SimpleDateFormat
 import java.util.Date

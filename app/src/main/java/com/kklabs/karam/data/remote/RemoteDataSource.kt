@@ -1,17 +1,15 @@
 package com.kklabs.karam.data.remote
 
 import com.kklabs.karam.data.DataSource
-import com.kklabs.karam.data.mapper.toUser
 import com.kklabs.karam.data.remote.request.CreateTaskRequest
 import com.kklabs.karam.data.remote.request.CreateTasklogRequest
 import com.kklabs.karam.data.remote.request.CreateUserRequest
 import com.kklabs.karam.data.remote.response.DataResponse
 import com.kklabs.karam.data.remote.response.HomeDataResponse
+import com.kklabs.karam.data.remote.response.LogEntity
 import com.kklabs.karam.data.remote.response.ModuleData
 import com.kklabs.karam.data.remote.response.TaskResponse
-import com.kklabs.karam.data.remote.response.TasklogResponse
 import com.kklabs.karam.data.remote.response.UserResponse
-import com.kklabs.karam.domain.model.User
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -80,7 +78,7 @@ class RemoteDataSource @Inject constructor(
         }
     }
 
-    override suspend fun createTasklog(request: CreateTasklogRequest): NetworkResponse<TasklogResponse> {
+    override suspend fun createTasklog(request: CreateTasklogRequest): NetworkResponse<LogEntity.TasklogEntity> {
         return when (val res = api.createTasklog(request)) {
             is NetworkResponse.Error -> {
                 res
@@ -95,7 +93,7 @@ class RemoteDataSource @Inject constructor(
     override suspend fun getTasklogs(
         taskId: Int,
         pageKey: Int?
-    ): NetworkResponse<DataResponse<List<ModuleData<*>>>> {
+    ): NetworkResponse<DataResponse<List<ModuleData<LogEntity>>>> {
         return when (val res = api.getTasklogs(taskId, pageKey)) {
             is NetworkResponse.Error -> {
                 res

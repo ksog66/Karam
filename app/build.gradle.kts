@@ -81,6 +81,7 @@ dependencies {
     //retrofit
     implementation(libs.retrofit)
     implementation(libs.moshi.kotlin)
+    implementation(libs.moshi.adapters)
     implementation(libs.retrofit.converter.moshi)
 
     //hilt
