@@ -23,9 +23,8 @@ fun TasklogsComponent(
             .background(Color.Green, MaterialTheme.shapes.medium)
             .padding(12.dp)
     ) {
-        Text(
+        TextP40(
             text = data.content,
-            fontSize = 14.sp,
             color = Color.Black
         )
     }

@@ -24,7 +24,7 @@ fun LogDateComponent(modifier: Modifier = Modifier, logDateData: TasklogsCompone
             .background(Color.Gray, MaterialTheme.shapes.medium)
             .padding(12.dp)
     ) {
-        TextP30(
+        TextP40(
             text = formattedDate,
             color = Color.Black
         )

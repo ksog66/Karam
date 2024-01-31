@@ -1,5 +1,6 @@
 package com.kklabs.karam.presentation.tasklogs
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,6 +24,7 @@ import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import com.kklabs.karam.domain.model.TasklogsComponentViewData
 import com.kklabs.karam.presentation.components.LogDateComponent
+import com.kklabs.karam.presentation.components.TaskLogInput
 import com.kklabs.karam.presentation.components.TasklogsComponent
 import com.kklabs.karam.presentation.components.TextH20
 
@@ -38,15 +40,18 @@ fun TasklogsRoute(
     TasklogsScreen(
         modifier = modifier.fillMaxSize(),
         tasklogs = tasklogsList,
-        taskName = taskName
+        taskName = taskName,
+        sendTasklog = viewModel::createTasklogs
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TasklogsScreen(
     modifier: Modifier = Modifier,
     tasklogs: LazyPagingItems<TasklogsComponentViewData>,
-    taskName: String
+    taskName: String,
+    sendTasklog: (message: String) -> Unit
 ) {
     Scaffold(
         modifier = modifier,
@@ -58,6 +63,13 @@ fun TasklogsScreen(
             modifier = modifier.padding(paddingValues),
             reverseLayout = true
         ) {
+
+            stickyHeader {
+                TaskLogInput(
+                    modifier = Modifier.fillMaxWidth(),
+                    sendTasklog = sendTasklog
+                )
+            }
             items(
                 count = tasklogs.itemCount,
                 contentType = tasklogs.itemContentType {

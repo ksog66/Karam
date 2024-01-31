@@ -38,7 +38,7 @@ class TasklogsViewModel @Inject constructor(
         TasklogsPagingSource(taskId = taskId, tasklogsRepository)
     }.flow.cachedIn(viewModelScope)
 
-    suspend fun createTasklogs(request: CreateTasklogRequest) = launchIO({
+    fun createTasklogs(message: String) = launchIO({
 
     }) {
 
