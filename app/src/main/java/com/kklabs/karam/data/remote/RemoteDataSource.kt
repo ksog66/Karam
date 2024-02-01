@@ -9,6 +9,7 @@ import com.kklabs.karam.data.remote.response.HomeDataResponse
 import com.kklabs.karam.data.remote.response.LogEntity
 import com.kklabs.karam.data.remote.response.ModuleData
 import com.kklabs.karam.data.remote.response.TaskResponse
+import com.kklabs.karam.data.remote.response.TasklogResponse
 import com.kklabs.karam.data.remote.response.UserResponse
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -78,7 +79,7 @@ class RemoteDataSource @Inject constructor(
         }
     }
 
-    override suspend fun createTasklog(request: CreateTasklogRequest): NetworkResponse<LogEntity.TasklogEntity> {
+    override suspend fun createTasklog(request: CreateTasklogRequest): NetworkResponse<TasklogResponse> {
         return when (val res = api.createTasklog(request)) {
             is NetworkResponse.Error -> {
                 res

@@ -6,6 +6,7 @@ import com.kklabs.karam.data.remote.request.CreateTasklogRequest
 import com.kklabs.karam.data.remote.response.DataResponse
 import com.kklabs.karam.data.remote.response.LogEntity
 import com.kklabs.karam.data.remote.response.ModuleData
+import com.kklabs.karam.data.remote.response.TasklogResponse
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,7 +19,7 @@ class TasklogsRepository @Inject constructor(
         return dataSource.getTasklogs(taskId, pageKey)
     }
 
-    suspend fun createTasklog(request: CreateTasklogRequest): NetworkResponse<LogEntity.TasklogEntity> {
+    suspend fun createTasklog(request: CreateTasklogRequest): NetworkResponse<TasklogResponse> {
         return dataSource.createTasklog(request)
     }
 }

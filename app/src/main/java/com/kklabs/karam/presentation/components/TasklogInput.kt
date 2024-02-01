@@ -40,14 +40,22 @@ fun TaskLogInput(
             ),
             keyboardActions = KeyboardActions(
                 onNext = {
-                    sendTasklog(message)
+                    if (message.isNotEmpty()) {
+                        sendTasklog(message.trim())
+                        message = ""
+                    }
                 }
             ),
             singleLine = true,
         )
 
         IconButton(
-            onClick = { sendTasklog(message) },
+            onClick = {
+                if (message.isNotEmpty()) {
+                    sendTasklog(message.trim())
+                    message = ""
+                }
+            },
             modifier = Modifier.padding(8.dp)
         ) {
             Icon(

@@ -8,6 +8,7 @@ import com.kklabs.karam.data.remote.response.HomeDataResponse
 import com.kklabs.karam.data.remote.response.LogEntity
 import com.kklabs.karam.data.remote.response.ModuleData
 import com.kklabs.karam.data.remote.response.TaskResponse
+import com.kklabs.karam.data.remote.response.TasklogResponse
 import com.kklabs.karam.data.remote.response.UserResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -39,7 +40,7 @@ interface NetworkApi {
     @POST("/api/v1/tasklog")
     suspend fun createTasklog(
         @Body request: CreateTasklogRequest
-    ): NetworkResponse<LogEntity.TasklogEntity>
+    ): NetworkResponse<TasklogResponse>
 
     @GET("/api/v1/tasklog")
     suspend fun getTasklogs(

@@ -13,13 +13,10 @@ import com.kklabs.karam.domain.model.TasklogsComponentViewData
 class TasklogsPagingSource(
     private val taskId: Int?,
     private val tasklogsRepo: TasklogsRepository
-): PagingSource<Int, TasklogsComponentViewData>() {
+) : PagingSource<Int, TasklogsComponentViewData>() {
 
     override fun getRefreshKey(state: PagingState<Int, TasklogsComponentViewData>): Int? {
-        return state.anchorPosition?.let { position ->
-            val page = state.closestPageToPosition(position)
-            page?.prevKey?.minus(1) ?: page?.nextKey?.plus(1)
-        }
+        return 0;
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, TasklogsComponentViewData> {
@@ -30,6 +27,7 @@ class TasklogsPagingSource(
                 is NetworkResponse.Error -> {
                     LoadResult.Error(Exception(response.body.message))
                 }
+
                 is NetworkResponse.Success -> {
                     val tasklogsList = mutableListOf<TasklogsComponentViewData>()
                     response.successBody.data.forEach { moduleData ->
@@ -41,7 +39,8 @@ class TasklogsPagingSource(
                             }
 
                             "log_date" -> {
-                                val logDate = (moduleData.data as LogEntity.LogDateEntity).toLogDateViewData()
+                                val logDate =
+                                    (moduleData.data as LogEntity.LogDateEntity).toLogDateViewData()
                                 tasklogsList.add(logDate)
                             }
                         }
@@ -53,11 +52,6 @@ class TasklogsPagingSource(
                     )
                 }
             }
-//            LoadResult.Page(
-//                data = response,
-//                prevKey = null,
-//                nextKey = if(response.users.isNotEmpty()) response.page + 1 else null
-//            )
         } catch (e: Exception) {
             LoadResult.Error(e)
         }
