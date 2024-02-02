@@ -8,9 +8,7 @@ import androidx.room.withTransaction
 import com.kklabs.karam.data.local.KaramDB
 import com.kklabs.karam.data.local.entity.RemoteKeys
 import com.kklabs.karam.data.local.entity.TasklogDbEntity
-import com.kklabs.karam.data.mapper.toLogDateViewData
 import com.kklabs.karam.data.mapper.toTasklogDbEntity
-import com.kklabs.karam.data.mapper.toTasklogViewData
 import com.kklabs.karam.data.remote.NetworkResponse
 import com.kklabs.karam.data.remote.response.LogEntity
 import retrofit2.HttpException
@@ -94,10 +92,10 @@ class TasklogsRemoteMediator(
                             db.remoteKeysDao().clearRemoteKeys()
                             db.tasklogsDao().clearTasklogs()
                         }
-                        val prevKey = if (page == 0) null else page - 1
-                        val nextKey = if (endOfPaginationReached) null else page + 1
+                        val prevKey = if (page == 0) null else page
+                        val nextKey = if (endOfPaginationReached) null else apiResponse.successBody.paginationKey
                         val keys = tasklogs.map {
-                            RemoteKeys(repoId = it.id, prevKey = prevKey, nextKey = nextKey)
+                            RemoteKeys(taskId = taskId, prevKey = prevKey, nextKey = nextKey)
                         }
                         db.remoteKeysDao().insertAll(keys)
                         db.tasklogsDao().insertAll(tasklogs)
@@ -120,7 +118,7 @@ class TasklogsRemoteMediator(
         return state.pages.lastOrNull() { it.data.isNotEmpty() }?.data?.lastOrNull()
             ?.let { tasklog ->
                 // Get the remote keys of the last item retrieved
-                db.remoteKeysDao().remoteKeysRepoId(tasklog.id)
+                db.remoteKeysDao().remoteKeysTaskId(taskId)
             }
     }
 
@@ -130,7 +128,7 @@ class TasklogsRemoteMediator(
         return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
             ?.let { tasklog ->
                 // Get the remote keys of the first items retrieved
-                db.remoteKeysDao().remoteKeysRepoId(tasklog.id)
+                db.remoteKeysDao().remoteKeysTaskId(taskId)
             }
     }
 
@@ -141,7 +139,7 @@ class TasklogsRemoteMediator(
         // Get the item closest to the anchor position
         return state.anchorPosition?.let { position ->
             state.closestItemToPosition(position)?.id?.let { tasklogId ->
-                db.remoteKeysDao().remoteKeysRepoId(tasklogId)
+                db.remoteKeysDao().remoteKeysTaskId(taskId)
             }
         }
     }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.codelabs.paging.db
+package com.kklabs.karam.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -28,8 +28,8 @@ interface RemoteKeysDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(remoteKey: List<RemoteKeys>)
 
-    @Query("SELECT * FROM remote_keys WHERE repoId = :repoId")
-    suspend fun remoteKeysRepoId(repoId: Long): RemoteKeys?
+    @Query("SELECT * FROM remote_keys WHERE taskId = :taskId")
+    suspend fun remoteKeysTaskId(taskId: Int): RemoteKeys?
 
     @Query("DELETE FROM remote_keys")
     suspend fun clearRemoteKeys()
