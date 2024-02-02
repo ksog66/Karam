@@ -109,11 +109,15 @@ dependencies {
 
     implementation(libs.paging.runtime)
     implementation(libs.paging.compose)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.paging)
 
     //network logger
     debugImplementation(libs.chucker.debug)
     releaseImplementation(libs.chucker.release)
 
+    ksp(libs.androidx.room.compiler)
     ksp(libs.dagger.hiltCompiler)
     ksp(libs.moshi.codegen)
 

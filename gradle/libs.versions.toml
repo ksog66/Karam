@@ -24,6 +24,7 @@ firebase-crashlytics = "2.9.9"
 constraintlayout = "2.1.4"
 constraintlayout-compose = "1.0.1"
 paging = "3.2.1"
+room-ktx = "2.6.1"
 
 
 [libraries]
@@ -67,6 +68,10 @@ androidx-constraintCompose = { group = "androidx.constraintlayout", name = "cons
 
 paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
 paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room-ktx" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room-ktx" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room-ktx" }
+androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room-ktx" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
