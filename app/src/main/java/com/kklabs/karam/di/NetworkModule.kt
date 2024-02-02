@@ -1,8 +1,10 @@
 package com.kklabs.karam.di
 
 import android.content.Context
+import androidx.room.Room
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.kklabs.karam.BuildConfig
+import com.kklabs.karam.data.local.KaramDB
 import com.kklabs.karam.data.remote.NetworkApi
 import com.kklabs.karam.data.remote.CommonHeadersInterceptor
 import com.kklabs.karam.data.remote.response.LogEntity
@@ -17,12 +19,14 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.Dispatchers
 import retrofit2.converter.moshi.MoshiConverterFactory
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 import javax.inject.Qualifier
 import javax.inject.Singleton
+import kotlin.coroutines.CoroutineContext
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -95,6 +99,16 @@ object NetworkModule {
             .addCallAdapterFactory(NetworkResponseAdapterFactory())
             .build()
     }
+
+    @Provides
+    @Singleton
+    fun provideCoroutineContext(): CoroutineContext = Dispatchers.IO
+
+    @Provides
+    @Singleton
+    fun provideSportifyDB(@ApplicationContext context: Context) =
+        Room.databaseBuilder(context, KaramDB::class.java, "karam.db")
+            .build()
 }
 
 @Qualifier

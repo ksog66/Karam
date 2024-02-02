@@ -11,8 +11,14 @@ import com.kklabs.karam.data.local.entity.TasklogDbEntity
 interface TasklogsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(tasklogs: List<TasklogDbEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOne(tasklog: TasklogDbEntity)
 
-    @Query("SELECT * FROM TasklogDbEntity ORDER BY dateCreated DESC")
-    fun getTasklogs(): PagingSource<Int, TasklogDbEntity>
+    @Query("SELECT * FROM tasklogdbentity WHERE taskId=:taskId ORDER BY id ")
+    fun getTasklogs(taskId: Int): PagingSource<Int, TasklogDbEntity>
+
+    @Query("DELETE FROM tasklogdbentity")
+    suspend fun clearTasklogs()
 }

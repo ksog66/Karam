@@ -1,6 +1,6 @@
 package com.kklabs.karam.data.remote
 
-import com.kklabs.karam.data.DataSource
+import com.kklabs.karam.domain.DataSource
 import com.kklabs.karam.data.remote.request.CreateTaskRequest
 import com.kklabs.karam.data.remote.request.CreateTasklogRequest
 import com.kklabs.karam.data.remote.request.CreateUserRequest

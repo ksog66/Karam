@@ -17,6 +17,8 @@ sealed class TasklogsComponentViewData {
         val date: Long
     ) : TasklogsComponentViewData()
 
+    object UnknownViewData : TasklogsComponentViewData()
+
 }
 
 

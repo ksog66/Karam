@@ -9,11 +9,12 @@ import com.kklabs.karam.data.remote.response.HomeDataResponse
 import com.kklabs.karam.data.remote.response.LogEntity
 import com.kklabs.karam.data.remote.response.ModuleData
 import com.kklabs.karam.data.remote.response.TaskResponse
+import com.kklabs.karam.data.remote.response.TasklogResponse
 import com.kklabs.karam.data.remote.response.UserResponse
 
 interface DataSource {
 
-    suspend fun getHomeData(): NetworkResponse<HomeDataResponse>
+    suspend fun getHomeData(year: Int): NetworkResponse<HomeDataResponse>
 
     suspend fun createUser(request: CreateUserRequest): NetworkResponse<UserResponse>
 
@@ -23,11 +24,11 @@ interface DataSource {
 
     suspend fun getTasks(): NetworkResponse<Nothing>
 
-    suspend fun createTasklog(request: CreateTasklogRequest): NetworkResponse<LogEntity.TasklogEntity>
+    suspend fun createTasklog(request: CreateTasklogRequest): NetworkResponse<TasklogResponse>
 
     suspend fun getTasklogs(
-        taskId: Long,
+        taskId: Int,
         pageKey: Int? = null
-    ): NetworkResponse<DataResponse<List<ModuleData<*>>>>
+    ): NetworkResponse<DataResponse<List<ModuleData<LogEntity>>>>
 
 }
