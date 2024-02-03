@@ -14,6 +14,8 @@ import com.kklabs.karam.data.remote.request.CreateTasklogRequest
 import com.kklabs.karam.data.remote.response.TasklogResponse
 import com.kklabs.karam.domain.TasklogsRemoteMediator
 import kotlinx.coroutines.flow.Flow
+import java.util.Calendar
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,7 +45,16 @@ class TasklogsRepository @Inject constructor(
     }
 
     suspend fun addTasklogs(tasklogs: TasklogResponse) {
-        val tasklogDbEntity = tasklogs.toTasklogDbEntity()
+        val lastTasklog = db.tasklogsDao().getLastTasklog()
+
+        val currentDate = Calendar.getInstance()
+        val tasklogDate = Calendar.getInstance().apply { time = lastTasklog.dateCreated }
+
+        val isLastRow = !(currentDate.get(Calendar.YEAR) == tasklogDate.get(Calendar.YEAR) &&
+                currentDate.get(Calendar.MONTH) == tasklogDate.get(Calendar.MONTH) &&
+                currentDate.get(Calendar.DAY_OF_MONTH) == tasklogDate.get(Calendar.DAY_OF_MONTH))
+
+        val tasklogDbEntity = tasklogs.toTasklogDbEntity(isLastRow)
         db.tasklogsDao().insertOne(tasklogDbEntity)
     }
 
