@@ -39,7 +39,9 @@ sealed class LogEntity(@Json(name = "log_type") logtype: String) {
         @Json(name = "user_id")
         val userId: Int,
         @Json(name = "log_type")
-        val logType: String
+        val logType: String,
+        @Json(name = "is_last_row")
+        val isLastRow: Boolean
     ) : LogEntity(logType)
 
     @JsonClass(generateAdapter = true)

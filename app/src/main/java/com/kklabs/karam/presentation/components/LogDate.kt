@@ -9,14 +9,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.kklabs.karam.domain.model.TasklogsComponentViewData
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 @Composable
-fun LogDateComponent(modifier: Modifier = Modifier, logDateData: TasklogsComponentViewData.LogDateViewData) {
-    val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).format(logDateData.date)
+fun LogDateComponent(modifier: Modifier = Modifier, logDateData: Long) {
+    val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).format(logDateData)
 
     Box(
         modifier = modifier
@@ -34,6 +33,5 @@ fun LogDateComponent(modifier: Modifier = Modifier, logDateData: TasklogsCompone
 @Composable
 @Preview
 fun LogDateComponentPreview() {
-    val mockLogDateData = TasklogsComponentViewData.LogDateViewData(Date().time)
-    LogDateComponent(logDateData = mockLogDateData)
+    LogDateComponent(logDateData = Date().time)
 }

@@ -14,9 +14,9 @@ interface TasklogsDao {
     suspend fun insertAll(tasklogs: List<TasklogDbEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOne(tasklog: TasklogDbEntity)
+    suspend fun insertOne(tasklog: TasklogDbEntity)
 
-    @Query("SELECT * FROM tasklogdbentity WHERE taskId=:taskId ORDER BY id ")
+    @Query("SELECT * FROM tasklogdbentity WHERE taskId=:taskId ORDER BY id DESC")
     fun getTasklogs(taskId: Int): PagingSource<Int, TasklogDbEntity>
 
     @Query("DELETE FROM tasklogdbentity")

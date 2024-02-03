@@ -4,24 +4,18 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.paging.filter
 import androidx.paging.map
-import com.kklabs.karam.data.mapper.toLogDateViewData
 import com.kklabs.karam.data.mapper.toTasklogViewData
 import com.kklabs.karam.data.remote.NetworkResponse
 import com.kklabs.karam.data.remote.request.CreateTasklogRequest
-import com.kklabs.karam.data.remote.response.LogType
 import com.kklabs.karam.data.repo.TasklogsRepository
-import com.kklabs.karam.domain.model.TasklogsComponentViewData
+import com.kklabs.karam.domain.model.TasklogViewData
 import com.kklabs.karam.presentation.base.BaseViewModel
 import com.kklabs.karam.presentation.navigation.TASK_ID_KEY
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
@@ -37,7 +31,7 @@ class TasklogsViewModel @Inject constructor(
 
     private val taskId: Int? = savedStateHandle[TASK_ID_KEY]
 
-    var tasklogsPager: Flow<PagingData<TasklogsComponentViewData>>
+    var tasklogsPager: Flow<PagingData<TasklogViewData>>
 
     private val _uiState = MutableStateFlow(TasklogsUiState())
     val uiState: StateFlow<TasklogsUiState> = _uiState
@@ -48,35 +42,21 @@ class TasklogsViewModel @Inject constructor(
                 tasklogsPager = tasklogsRepository.getTasklogs(taskId)
                     .map { pagingData ->
                         pagingData.map { tasklogDbEntity ->
-                            when (tasklogDbEntity.logType) {
-                                LogType.TASK_LOG.mName -> {
-                                    tasklogDbEntity.toTasklogViewData()
-                                }
-
-                                LogType.LOG_DATE.mName -> {
-                                    tasklogDbEntity.toLogDateViewData()
-                                }
-
-                                else -> {
-                                    TasklogsComponentViewData.UnknownViewData
-                                }
-                            }
+                            tasklogDbEntity.toTasklogViewData()
                         }
                     }.cachedIn(viewModelScope)
             } else {
                 _uiState.value = TasklogsUiState(errorMessage = "TaskId invalid")
-                tasklogsPager = flow { PagingData.empty<TasklogsComponentViewData>() }
+                tasklogsPager = flow { PagingData.empty<TasklogViewData>() }
             }
         } catch (exception: Exception) {
-            tasklogsPager = flow { PagingData.empty<TasklogsComponentViewData>() }
+            tasklogsPager = flow { PagingData.empty<TasklogViewData>() }
             _uiState.value = TasklogsUiState(errorMessage = exception.message)
         }
 
     }
 
-    fun createTasklogs(message: String) = launchIO({
-
-    }) {
+    fun createTasklogs(message: String) = launchIO {
         try {
             val request = CreateTasklogRequest(
                 content = message,
@@ -95,6 +75,8 @@ class TasklogsViewModel @Inject constructor(
                     _uiState.update { currentState ->
                         currentState.copy(errorMessage = null, isLogAdded = true)
                     }
+
+                    tasklogsRepository.addTasklogs(res.successBody)
                 }
             }
         } catch (e: Exception) {
@@ -106,10 +88,6 @@ class TasklogsViewModel @Inject constructor(
 
     fun resetUiState() = launchIO {
         _uiState.value = TasklogsUiState()
-    }
-
-    private fun fetchTasklogs() = launchIO {
-
     }
 }
 

@@ -7,6 +7,8 @@ import androidx.paging.PagingData
 import com.kklabs.karam.domain.DataSource
 import com.kklabs.karam.data.local.KaramDB
 import com.kklabs.karam.data.local.entity.TasklogDbEntity
+import com.kklabs.karam.data.mapper.toTasklogDbEntity
+import com.kklabs.karam.data.mapper.toTasklogViewData
 import com.kklabs.karam.data.remote.NetworkResponse
 import com.kklabs.karam.data.remote.request.CreateTasklogRequest
 import com.kklabs.karam.data.remote.response.TasklogResponse
@@ -38,6 +40,11 @@ class TasklogsRepository @Inject constructor(
 
     suspend fun createTasklog(request: CreateTasklogRequest): NetworkResponse<TasklogResponse> {
         return dataSource.createTasklog(request)
+    }
+
+    suspend fun addTasklogs(tasklogs: TasklogResponse) {
+        val tasklogDbEntity = tasklogs.toTasklogDbEntity()
+        db.tasklogsDao().insertOne(tasklogDbEntity)
     }
 
 

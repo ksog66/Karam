@@ -76,12 +76,6 @@ class TasklogsRemoteMediator(
                                     (moduleData.data as LogEntity.TasklogEntity).toTasklogDbEntity()
                                 tasklogs.add(taskLog)
                             }
-
-                            "log_date" -> {
-                                val logDate =
-                                    (moduleData.data as LogEntity.LogDateEntity).toTasklogDbEntity(taskId)
-                                tasklogs.add(logDate)
-                            }
                         }
                     }
 

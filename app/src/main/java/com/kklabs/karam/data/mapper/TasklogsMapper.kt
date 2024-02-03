@@ -3,22 +3,30 @@ package com.kklabs.karam.data.mapper
 import com.kklabs.karam.data.local.entity.TasklogDbEntity
 import com.kklabs.karam.data.remote.response.LogEntity
 import com.kklabs.karam.data.remote.response.TasklogResponse
-import com.kklabs.karam.domain.model.TasklogsComponentViewData
+import com.kklabs.karam.domain.model.TasklogViewData
 
 
-fun LogEntity.TasklogEntity.toTasklogViewData(): TasklogsComponentViewData.TasklogViewData {
-    return TasklogsComponentViewData.TasklogViewData(
-        content, dateCreated, id, taskId, type, userId
+fun LogEntity.TasklogEntity.toTasklogViewData(): TasklogViewData {
+    return TasklogViewData(
+        content, dateCreated, id, taskId, type, userId, isLastRow
     )
 }
 
-fun LogEntity.LogDateEntity.toLogDateViewData(): TasklogsComponentViewData.LogDateViewData {
-    return TasklogsComponentViewData.LogDateViewData(date)
+fun TasklogResponse.toTasklogViewData(): TasklogViewData {
+    return TasklogViewData(
+        content, dateCreated, id, taskId, type, userId, isLastRow = false
+    )
 }
 
-fun TasklogResponse.toTasklogViewData(): TasklogsComponentViewData.TasklogViewData {
-    return TasklogsComponentViewData.TasklogViewData(
-        content, dateCreated, id, taskId, type, userId
+fun TasklogResponse.toTasklogDbEntity(): TasklogDbEntity {
+    return TasklogDbEntity(
+        content = content,
+        id = id,
+        dateCreated = dateCreated,
+        taskId = taskId,
+        type = type,
+        userId = userId,
+        isLastRow = false //TODO("write some logic for this to determine is this last row or not)
     )
 }
 
@@ -29,23 +37,7 @@ fun LogEntity.TasklogEntity.toTasklogDbEntity(): TasklogDbEntity {
         taskId = taskId,
         type = type,
         userId = userId,
-        logType = logType,
-        date = null,
-        tasklogId = id,
-        entityDateCreated = System.currentTimeMillis()
-    )
-}
-
-fun LogEntity.LogDateEntity.toTasklogDbEntity(taskId: Int): TasklogDbEntity {
-    return TasklogDbEntity(
-        content = null,
-        dateCreated = null,
-        taskId = taskId,
-        type = null,
-        userId = null,
-        logType = logType,
-        date = date,
-        tasklogId = null,
-        entityDateCreated = System.currentTimeMillis()
+        id = id,
+        isLastRow = isLastRow
     )
 }

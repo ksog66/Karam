@@ -3,7 +3,6 @@ package com.kklabs.karam.presentation.tasklogs
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,7 +28,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
-import com.kklabs.karam.domain.model.TasklogsComponentViewData
+import com.kklabs.karam.domain.model.TasklogViewData
 import com.kklabs.karam.presentation.components.LogDateComponent
 import com.kklabs.karam.presentation.components.TaskLogInput
 import com.kklabs.karam.presentation.components.TasklogsComponent
@@ -54,15 +53,6 @@ fun TasklogsRoute(
         }
     }
 
-    LaunchedEffect(uiState.isLogAdded) {
-        uiState.isLogAdded?.let { isAdded ->
-            if (isAdded) {
-                tasklogsList.refresh()
-                viewModel.resetUiState()
-            }
-        }
-    }
-
     TasklogsScreen(
         modifier = modifier.fillMaxSize(),
         tasklogs = tasklogsList,
@@ -76,7 +66,7 @@ fun TasklogsRoute(
 @Composable
 fun TasklogsScreen(
     modifier: Modifier = Modifier,
-    tasklogs: LazyPagingItems<TasklogsComponentViewData>,
+    tasklogs: LazyPagingItems<TasklogViewData>,
     taskName: String,
     sendTasklog: (message: String) -> Unit,
     navigateBack: () -> Unit
@@ -96,37 +86,34 @@ fun TasklogsScreen(
             ) {
                 items(
                     count = tasklogs.itemCount,
+                    key = tasklogs.itemKey { tasklog -> tasklog.id },
                     contentType = tasklogs.itemContentType {
-                        "TasklogsComponentViewData"
+                        "Tasklogs"
                     }
                 ) { index: Int ->
-                    when (val feedItem = tasklogs[index]) {
-                        is TasklogsComponentViewData.LogDateViewData -> {
+                    val feedItem = tasklogs[index]
+
+                    if (feedItem != null) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            TasklogsComponent(
+                                modifier = Modifier.align(Alignment.End),
+                                data = feedItem
+                            )
+                        }
+
+                        if (feedItem.isLastRow) {
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
                             ) {
                                 LogDateComponent(
                                     modifier = Modifier.align(Alignment.CenterHorizontally),
-                                    logDateData = feedItem
+                                    logDateData = feedItem.dateCreated.time
                                 )
                             }
-                        }
-
-                        is TasklogsComponentViewData.TasklogViewData -> {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                            ) {
-                                TasklogsComponent(
-                                    modifier = Modifier.align(Alignment.End),
-                                    data = feedItem
-                                )
-                            }
-                        }
-
-                        else -> {
-
                         }
                     }
                 }
