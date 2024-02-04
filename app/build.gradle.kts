@@ -38,7 +38,7 @@ android {
         }
 
         debug {
-            buildConfigField("String", "BASE_URL", "\"http://192.168.1.10:5000\"")
+            buildConfigField("String", "BASE_URL", "\"https://karam-dev-app.onrender.com\"")
         }
     }
     compileOptions {

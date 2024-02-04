@@ -1,5 +1,6 @@
 package com.kklabs.karam.presentation.tasklogs
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -83,6 +84,12 @@ class TasklogsViewModel @Inject constructor(
             _uiState.update { currentState ->
                 currentState.copy(errorMessage = e.message)
             }
+            Log.e(
+                TAG, """
+                error While adding new log message -> ${e.message}
+            """.trimIndent(),
+                e
+            )
         }
     }
 

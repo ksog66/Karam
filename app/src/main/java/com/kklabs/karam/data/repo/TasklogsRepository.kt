@@ -48,11 +48,16 @@ class TasklogsRepository @Inject constructor(
         val lastTasklog = db.tasklogsDao().getLastTasklog()
 
         val currentDate = Calendar.getInstance()
-        val tasklogDate = Calendar.getInstance().apply { time = lastTasklog.dateCreated }
+        val isLastRow = if (lastTasklog != null) {
+            val tasklogDate = Calendar.getInstance().apply { time = lastTasklog.dateCreated }
 
-        val isLastRow = !(currentDate.get(Calendar.YEAR) == tasklogDate.get(Calendar.YEAR) &&
-                currentDate.get(Calendar.MONTH) == tasklogDate.get(Calendar.MONTH) &&
-                currentDate.get(Calendar.DAY_OF_MONTH) == tasklogDate.get(Calendar.DAY_OF_MONTH))
+            !(currentDate.get(Calendar.YEAR) == tasklogDate.get(Calendar.YEAR) &&
+                    currentDate.get(Calendar.MONTH) == tasklogDate.get(Calendar.MONTH) &&
+                    currentDate.get(Calendar.DAY_OF_MONTH) == tasklogDate.get(Calendar.DAY_OF_MONTH))
+        } else {
+            true
+        }
+
 
         val tasklogDbEntity = tasklogs.toTasklogDbEntity(isLastRow)
         db.tasklogsDao().insertOne(tasklogDbEntity)
