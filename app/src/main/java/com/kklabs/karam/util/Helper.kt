@@ -75,6 +75,6 @@ fun fetchIcon(icon: String?): Int {
         SOCCER -> R.drawable.soccer_icon
         STUDY -> R.drawable.study_icon
         WOMAN -> R.drawable.woman_icon
-        else -> R.drawable.camera_icon
+        else -> R.drawable.ic_yoga
     }
 }

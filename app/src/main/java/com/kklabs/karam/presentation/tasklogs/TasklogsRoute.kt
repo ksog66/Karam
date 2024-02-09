@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -16,7 +17,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,9 +51,17 @@ fun TasklogsRoute(
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    val isLogAdded = rememberSaveable { (mutableStateOf(false)) }
+
     LaunchedEffect(uiState.errorMessage) {
         uiState.errorMessage?.let { message ->
             showShortToast(context, message)
+        }
+    }
+
+    LaunchedEffect(uiState.isLogAdded) {
+        uiState.isLogAdded?.let {
+            isLogAdded.value = it
         }
     }
 
@@ -58,19 +70,26 @@ fun TasklogsRoute(
         tasklogs = tasklogsList,
         taskName = taskName,
         sendTasklog = viewModel::createTasklogs,
-        navigateBack = navigateBack
+        navigateBack = navigateBack,
+        isNewLogAdded = isLogAdded
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TasklogsScreen(
     modifier: Modifier = Modifier,
     tasklogs: LazyPagingItems<TasklogViewData>,
     taskName: String,
     sendTasklog: (message: String) -> Unit,
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
+    isNewLogAdded: MutableState<Boolean>,
 ) {
+    val lazyListState = rememberLazyListState()
+    LaunchedEffect(isNewLogAdded) {
+        if (isNewLogAdded.value) {
+            lazyListState.scrollToItem(0)
+        }
+    }
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -82,7 +101,8 @@ fun TasklogsScreen(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth(),
-                reverseLayout = true
+                reverseLayout = true,
+                state = lazyListState
             ) {
                 items(
                     count = tasklogs.itemCount,

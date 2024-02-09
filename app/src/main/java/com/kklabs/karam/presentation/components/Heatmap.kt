@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -41,7 +42,9 @@ fun Heatmap(
         ) {
             val heatmapColumns = data.entries.chunked(7)
             heatmapColumns.fastForEachIndexed { index, weekdata ->
-                HeatmapColumn(weekData = weekdata, baseColor)
+                key(weekdata.sumOf { it.key }) {
+                    HeatmapColumn(weekData = weekdata, baseColor)
+                }
             }
         }
     }
@@ -70,8 +73,10 @@ fun MonthNamesRow(modifier: Modifier = Modifier) {
 fun HeatmapColumn(weekData: List<Map.Entry<Long, Int>>, baseColor: String) {
     Column {
         weekData.forEach { (date, count) ->
-            HeatmapBox(count = count, baseColor = baseColor) {
+            key(date) {
+                HeatmapBox(count = count, baseColor = baseColor) {
 
+                }
             }
         }
     }

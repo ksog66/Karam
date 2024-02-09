@@ -2,6 +2,7 @@ package com.kklabs.karam.data.remote
 
 import android.app.Application
 import android.content.Context
+import com.kklabs.karam.BuildConfig
 import com.kklabs.karam.data.ds.ConfigPreferences
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -24,7 +25,7 @@ class CommonHeadersInterceptor @Inject constructor(
             requestBuilder.addHeader(CONTENT_TYPE, "application/json;charset=utf-8")
             requestBuilder.addHeader(CONNECTION, "keep-alive")
             requestBuilder.addHeader(CONTENT_ACCEPT, "application/json")
-//            requestBuilder.addHeader(API_KEY, BuildConfig.API_KEY)
+            requestBuilder.addHeader(API_KEY, BuildConfig.API_KEY)
             requestBuilder.addHeader(AUTHORIZATION, "Bearer ${configPreferences.getAuthToken()}")
             requestBuilder.addHeader(APP_CLIENT, "consumer-android")
             requestBuilder.addHeader(APP_IDENTIFIER, configPreferences.getApplicationPackage())

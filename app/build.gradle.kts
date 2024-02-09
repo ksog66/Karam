@@ -1,3 +1,4 @@
+import java.util.Properties
 
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
@@ -8,6 +9,13 @@ plugins {
     alias(libs.plugins.googleServices)
     alias(libs.plugins.firebaseCrashlytics)
 }
+
+val properties = Properties().apply {
+    load(file("keys.properties").reader())
+}
+
+val baseUrl: String by properties
+val apiKey: String by properties
 
 android {
     namespace = "com.kklabs.karam"
@@ -33,12 +41,15 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+            buildConfigField("String", "API_KEY", "\"$apiKey\"")
 
-            buildConfigField("String", "BASE_URL", "\"http://192.168.1.10:5000\"")
+//            buildConfigField("String", "BASE_URL", "\"http://192.168.1.10:5000\"")
         }
 
         debug {
-            buildConfigField("String", "BASE_URL", "\"https://karam-dev-app.onrender.com\"")
+            buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+            buildConfigField("String", "API_KEY", "\"$apiKey\"")
         }
     }
     compileOptions {
