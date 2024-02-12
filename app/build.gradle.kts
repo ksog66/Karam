@@ -15,6 +15,7 @@ val properties = Properties().apply {
 }
 
 val baseUrl: String by properties
+val prodBaseUrl: String by properties
 val apiKey: String by properties
 
 android {
@@ -41,14 +42,14 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+            buildConfigField("String", "BASE_URL", "\"$prodBaseUrl\"")
             buildConfigField("String", "API_KEY", "\"$apiKey\"")
 
 //            buildConfigField("String", "BASE_URL", "\"http://192.168.1.10:5000\"")
         }
 
         debug {
-            buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+            buildConfigField("String", "BASE_URL", "\"$prodBaseUrl\"")
             buildConfigField("String", "API_KEY", "\"$apiKey\"")
         }
     }

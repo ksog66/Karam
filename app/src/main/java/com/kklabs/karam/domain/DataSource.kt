@@ -4,6 +4,7 @@ import com.kklabs.karam.data.remote.NetworkResponse
 import com.kklabs.karam.data.remote.request.CreateTaskRequest
 import com.kklabs.karam.data.remote.request.CreateTasklogRequest
 import com.kklabs.karam.data.remote.request.CreateUserRequest
+import com.kklabs.karam.data.remote.request.UpdateTaskRequest
 import com.kklabs.karam.data.remote.response.DataResponse
 import com.kklabs.karam.data.remote.response.HomeDataResponse
 import com.kklabs.karam.data.remote.response.LogEntity
@@ -20,7 +21,9 @@ interface DataSource {
 
     suspend fun createTask(request: CreateTaskRequest): NetworkResponse<TaskResponse>
 
-    suspend fun getTask(id: Long): NetworkResponse<TaskResponse>
+    suspend fun updateTask(request: UpdateTaskRequest): NetworkResponse<TaskResponse>
+
+    suspend fun getTask(id: Int): NetworkResponse<TaskResponse>
 
     suspend fun getTasks(): NetworkResponse<Nothing>
 

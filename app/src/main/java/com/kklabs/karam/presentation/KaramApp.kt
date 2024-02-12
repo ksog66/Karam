@@ -30,6 +30,7 @@ import com.kklabs.karam.presentation.navigation.TASK_ID_KEY
 import com.kklabs.karam.presentation.navigation.TASK_NAME_KEY
 import com.kklabs.karam.presentation.tasklogs.TasklogsRoute
 import com.kklabs.karam.presentation.tasks.CreateTaskRoute
+import com.kklabs.karam.presentation.tasks.EditTaskRoute
 import com.kklabs.karam.presentation.welcome.WelcomeRoute
 import java.time.LocalDate
 import java.util.Calendar
@@ -121,13 +122,23 @@ fun KaramNavHost(
             arguments = listOf(navArgument(TASK_ID_KEY) { type = NavType.IntType },
                 navArgument(TASK_NAME_KEY) { type = NavType.StringType })
         ) {
+            val taskName = it.arguments?.getString(TASK_NAME_KEY) ?: ""
             TasklogsRoute(
                 modifier = modifier,
-                taskName = "Coding",
+                taskName = taskName,
                 navigateBack = {
                     navHost.navigateUp()
                 }
             )
+        }
+
+        composable(
+            route = KaramScreens.EditTask.route,
+            arguments = listOf(navArgument(TASK_ID_KEY) { type = NavType.IntType })
+        ) {
+            EditTaskRoute(modifier = modifier) {
+
+            }
         }
     }
 }

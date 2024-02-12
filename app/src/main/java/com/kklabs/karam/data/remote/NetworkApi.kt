@@ -3,6 +3,7 @@ package com.kklabs.karam.data.remote
 import com.kklabs.karam.data.remote.request.CreateTaskRequest
 import com.kklabs.karam.data.remote.request.CreateTasklogRequest
 import com.kklabs.karam.data.remote.request.CreateUserRequest
+import com.kklabs.karam.data.remote.request.UpdateTaskRequest
 import com.kklabs.karam.data.remote.response.DataResponse
 import com.kklabs.karam.data.remote.response.HomeDataResponse
 import com.kklabs.karam.data.remote.response.LogEntity
@@ -32,7 +33,12 @@ interface NetworkApi {
     ): NetworkResponse<TaskResponse>
 
     @GET("/api/v1/task/{id}")
-    suspend fun getTask(@Path(Keys.ID) id: Long): NetworkResponse<TaskResponse>
+    suspend fun getTask(@Path(Keys.ID) id: Int): NetworkResponse<TaskResponse>
+
+    @POST("/api/v1/task/{id}")
+    suspend fun updateTask(
+        @Body request: UpdateTaskRequest
+    ): NetworkResponse<TaskResponse>
 
     @GET("/api/v1/task")
     suspend fun getTasks(): NetworkResponse<Nothing>

@@ -8,9 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.Button
@@ -26,21 +24,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kklabs.karam.R
 import com.kklabs.karam.data.remote.request.CreateTaskRequest
+import com.kklabs.karam.data.remote.request.UpdateTaskRequest
+import com.kklabs.karam.domain.model.Task
 import com.kklabs.karam.domain.model.karamColors
 import com.kklabs.karam.presentation.components.ColorsGrid
 import com.kklabs.karam.presentation.components.IconsGrid
 import com.kklabs.karam.presentation.components.TextH10
-import com.kklabs.karam.presentation.components.TextH30
 import com.kklabs.karam.presentation.components.TextH40
 import com.kklabs.karam.presentation.components.TextP30
 import com.kklabs.karam.util.TaskIcons.AllTaskIcons
@@ -61,16 +58,19 @@ fun CreateTaskRoute(
             showShortToast(context, errorMessage)
             viewModel.resetState()
         }
+
         is CreateTaskUiState.Idle -> {
 
         }
+
         is CreateTaskUiState.Success -> {
             showShortToast(context, stringResource(id = R.string.task_created_successfully))
             navigateBack(true)
         }
     }
-    CreateTaskScreen(
+    AddOrEditTaskScreen(
         modifier = modifier,
+        task = null,
         addNewTask = viewModel::createTask,
         navigateBack = {
             navigateBack.invoke(false)
@@ -79,15 +79,18 @@ fun CreateTaskRoute(
 }
 
 @Composable
-fun CreateTaskScreen(
+fun AddOrEditTaskScreen(
     modifier: Modifier = Modifier,
-    addNewTask: (request: CreateTaskRequest) -> Unit,
+    task: Task? = null,
+    addNewTask: (request: CreateTaskRequest) -> Unit = {},
+    updateTask: (request: UpdateTaskRequest) -> Unit = {},
     navigateBack: () -> Unit
 ) {
     val context = LocalContext.current
-    val taskName = rememberSaveable { mutableStateOf("") }
-    val selectedIcon = rememberSaveable { mutableStateOf(AllTaskIcons.first()) }
-    val selectedColor = rememberSaveable { mutableStateOf(karamColors.first().value) }
+    val taskName = rememberSaveable(task) { mutableStateOf(task?.title ?: "") }
+    val selectedIcon = rememberSaveable(task) { mutableStateOf(task?.icon ?: AllTaskIcons.first()) }
+    val selectedColor =
+        rememberSaveable(task) { mutableStateOf(task?.color ?: karamColors.first().value) }
 
     Column(modifier = modifier.fillMaxSize()) {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -158,11 +161,11 @@ fun CreateTaskScreen(
                 .padding(16.dp),
             onClick = {
                 if (taskName.value.isEmpty()) {
-                    //Write a toast
+                    showShortToast(context, "karam name can't be empty")
                     return@Button
                 }
                 val request = CreateTaskRequest(
-                    title = taskName.value,
+                    title = taskName.value.trim(),
                     icon = selectedIcon.value,
                     color = selectedColor.value,
                     dateCreated = System.currentTimeMillis()
