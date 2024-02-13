@@ -103,6 +103,11 @@ fun KaramNavHost(
                 forceFetchFeed = forceFetchHomeFeed,
                 onNewTaskClick = {
                     navHost.navigate(KaramScreens.CreateTask.route)
+                },
+                onTaskClick = {
+                    navHost.navigate(
+                        KaramScreens.EditTask.passTaskId(it)
+                    )
                 }
             )
         }

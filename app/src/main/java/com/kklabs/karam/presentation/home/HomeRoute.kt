@@ -56,7 +56,8 @@ fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel(),
     userCreatedYear: Int,
     onNewTaskClick: () -> Unit,
-    onLogClick: (name: String, id:Int) -> Unit
+    onLogClick: (name: String, id:Int) -> Unit,
+    onTaskClick: (Int) -> Unit
 ) {
     val yearRange = remember {
         generateYearList(userCreatedYear).asReversed()
@@ -117,7 +118,8 @@ fun HomeRoute(
                 onLogClick = onLogClick,
                 onSelectYearClick = {
                     showYearSelectionDialog = true
-                }
+                },
+                onTaskClick = onTaskClick
             )
         }
     }
@@ -131,7 +133,8 @@ fun HomeScreen(
     onNewTaskClick: () -> Unit,
     selectedYear: Int,
     onSelectYearClick: () -> Unit,
-    onLogClick: (name: String, id:Int) -> Unit
+    onLogClick: (name: String, id:Int) -> Unit,
+    onTaskClick: (Int) -> Unit
 ) {
     Scaffold(
         modifier = modifier,
@@ -175,6 +178,9 @@ fun HomeScreen(
                     selectedYear = null,
                     onLogClick = {
                         onLogClick(taskItem.name, taskItem.id)
+                    },
+                    onTaskClick = {
+                        onTaskClick(taskItem.id)
                     }
                 )
             }

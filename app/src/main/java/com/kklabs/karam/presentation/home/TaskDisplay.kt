@@ -56,7 +56,8 @@ fun TaskDisplay(
     selectedYear: Int?,
     tasklogs: Map<Long, Int>,
     onLogClick: () -> Unit = {},
-    onSelectYearClick: () -> Unit = {}
+    onSelectYearClick: () -> Unit = {},
+    onTaskClick: () -> Unit = {}
 ) {
     val isIndividual = type == TaskDisplayType.INDIVIDUAL
     val title = when (type) {
@@ -80,7 +81,12 @@ fun TaskDisplay(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(4.dp),
+            .padding(4.dp)
+            .clickable {
+                if (task != null) {
+                    onTaskClick()
+                }
+            },
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimaryContainer),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
     ) {
@@ -135,7 +141,12 @@ fun TaskDisplay(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Blue
                         ),
-                        contentPadding = PaddingValues(start = 12.dp, bottom = 8.dp, top = 8.dp, end = 8.dp),
+                        contentPadding = PaddingValues(
+                            start = 12.dp,
+                            bottom = 8.dp,
+                            top = 8.dp,
+                            end = 8.dp
+                        ),
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         TextH50(

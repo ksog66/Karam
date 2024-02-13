@@ -13,14 +13,22 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.key
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
+import com.kklabs.karam.R
+import com.kklabs.karam.util.formatDate
 import com.kklabs.karam.util.generateCommitColor
+import com.kklabs.karam.util.showShortToast
+import kotlinx.coroutines.launch
 
 @Composable
 fun Heatmap(
@@ -29,6 +37,8 @@ fun Heatmap(
     baseColor: String
 ) {
     val horizontalScrollState = rememberScrollState()
+    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -43,7 +53,20 @@ fun Heatmap(
             val heatmapColumns = data.entries.chunked(7)
             heatmapColumns.fastForEachIndexed { index, weekdata ->
                 key(weekdata.sumOf { it.key }) {
-                    HeatmapColumn(weekData = weekdata, baseColor)
+                    HeatmapColumn(weekData = weekdata, baseColor) { date, count ->
+                        coroutineScope.launch {
+                            showShortToast(
+                                context,
+                                if (date > System.currentTimeMillis()) {
+                                    "You might not see ${formatDate(date)}"
+                                } else if (count <= 0) {
+                                    "You ate a 5 star on ${formatDate(date)}"
+                                } else {
+                                    "$count deeds on ${formatDate(date)}"
+                                }
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -70,13 +93,18 @@ fun MonthNamesRow(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun HeatmapColumn(weekData: List<Map.Entry<Long, Int>>, baseColor: String) {
+fun HeatmapColumn(
+    weekData: List<Map.Entry<Long, Int>>,
+    baseColor: String,
+    onItemClick: (date: Long, count: Int) -> Unit
+) {
     Column {
         weekData.forEach { (date, count) ->
             key(date) {
-                HeatmapBox(count = count, baseColor = baseColor) {
-
-                }
+                HeatmapBox(
+                    count = count,
+                    baseColor = baseColor,
+                    onItemClick = { onItemClick(date, count) })
             }
         }
     }
@@ -96,7 +124,7 @@ fun HeatmapBox(
             .clickable {
                 onItemClick.invoke()
             }
-            .background(Color(generateCommitColor(count,baseColor)))
+            .background(Color(generateCommitColor(count, baseColor)))
     )
 }
 

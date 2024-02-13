@@ -14,4 +14,6 @@
     <string name="add_karam">Add Karam</string>
     <string name="task_name_is_empty">Task name is empty</string>
     <string name="task_created_successfully">Task created successfully</string>
+    <string name="edit_karam">Edit Karam</string>
+    <string name="you_ate_5_star">You ate 5 star</string>
 </resources>

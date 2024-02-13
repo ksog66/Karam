@@ -1,6 +1,7 @@
 package com.kklabs.karam.presentation.tasks
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,9 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,6 +41,7 @@ import com.kklabs.karam.domain.model.karamColors
 import com.kklabs.karam.presentation.components.ColorsGrid
 import com.kklabs.karam.presentation.components.IconsGrid
 import com.kklabs.karam.presentation.components.TextH10
+import com.kklabs.karam.presentation.components.TextH20
 import com.kklabs.karam.presentation.components.TextH40
 import com.kklabs.karam.presentation.components.TextP30
 import com.kklabs.karam.util.TaskIcons.AllTaskIcons
@@ -84,6 +88,7 @@ fun AddOrEditTaskScreen(
     task: Task? = null,
     addNewTask: (request: CreateTaskRequest) -> Unit = {},
     updateTask: (request: UpdateTaskRequest) -> Unit = {},
+    deleteTask: (Int) -> Unit = {},
     navigateBack: () -> Unit
 ) {
     val context = LocalContext.current
@@ -92,24 +97,57 @@ fun AddOrEditTaskScreen(
     val selectedColor =
         rememberSaveable(task) { mutableStateOf(task?.color ?: karamColors.first().value) }
 
+    val isEditing = task != null
+    val title =
+        if (isEditing) stringResource(id = R.string.edit_karam) else stringResource(id = R.string.add_karam)
+
     Column(modifier = modifier.fillMaxSize()) {
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            IconButton(
-                onClick = navigateBack,
-                modifier = Modifier
-                    .padding(vertical = 16.dp, horizontal = 8.dp)
-                    .background(Color.Black, shape = RoundedCornerShape(8.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBackIosNew,
-                    contentDescription = "Go Back",
-                    tint = Color.White
+                IconButton(
+                    onClick = navigateBack,
+                    modifier = Modifier
+                        .padding(vertical = 16.dp, horizontal = 8.dp)
+                        .background(Color.Black, shape = RoundedCornerShape(8.dp))
+                        .size(36.dp)
+                ) {
+                    Icon(
+                        modifier = Modifier.size(24.dp),
+                        imageVector = Icons.Filled.ArrowBackIosNew,
+                        contentDescription = "Go Back",
+                        tint = Color.White
+                    )
+                }
+
+                TextH20(
+                    text = title
                 )
             }
 
-            TextH10(
-                text = stringResource(id = R.string.new_karam)
-            )
+            if (isEditing) {
+                IconButton(
+                    onClick = {
+                        deleteTask(task?.id ?: -1)
+                    },
+                    modifier = Modifier
+                        .padding(vertical = 16.dp, horizontal = 8.dp)
+                        .background(Color.Black, shape = RoundedCornerShape(8.dp))
+                        .size(36.dp)
+                ) {
+                    Icon(
+                        modifier = Modifier.size(24.dp),
+                        imageVector = Icons.Filled.DeleteOutline,
+                        contentDescription = "Delete Task",
+                        tint = Color.White
+                    )
+                }
+            }
         }
 
         OutlinedTextField(

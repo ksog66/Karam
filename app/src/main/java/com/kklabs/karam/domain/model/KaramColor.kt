@@ -23,5 +23,6 @@ val karamColors = listOf(
     KaramColor("Turquoise", "#40E0D0"),
     KaramColor("Firebrick", "#B22222"),
     KaramColor("Medium Orchid", "#BA55D3"),
-    KaramColor("Lime Green", "#32CD32")
+    KaramColor("Lime Green", "#32CD32"),
+    KaramColor("Crimson Red", "#DE2745")
 )
