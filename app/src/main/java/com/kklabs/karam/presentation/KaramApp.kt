@@ -142,6 +142,10 @@ fun KaramNavHost(
             arguments = listOf(navArgument(TASK_ID_KEY) { type = NavType.IntType })
         ) {
             EditTaskRoute(modifier = modifier) {
+                navHost.previousBackStackEntry?.savedStateHandle?.set<Boolean>(
+                    FORCE_FETCH_HOME_FEED_KEY,
+                    it
+                )
                 navHost.navigateUp()
             }
         }

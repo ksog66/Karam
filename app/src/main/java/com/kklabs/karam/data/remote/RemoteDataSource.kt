@@ -69,8 +69,15 @@ class RemoteDataSource @Inject constructor(
         }
     }
 
-    override suspend fun deleteTask(id: Int): ServerResponse {
-        return api.deleteTask(id)
+    override suspend fun deleteTask(id: Int): NetworkResponse<ServerResponse> {
+        return when (val res = api.deleteTask(id)) {
+            is NetworkResponse.Error -> {
+                res
+            }
+            is NetworkResponse.Success -> {
+                NetworkResponse.Success(res.body)
+            }
+        }
     }
 
     override suspend fun getTask(id: Int): NetworkResponse<TaskResponse> {

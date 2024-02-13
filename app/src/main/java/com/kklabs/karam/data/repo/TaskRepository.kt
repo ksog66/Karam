@@ -30,7 +30,7 @@ class TaskRepository @Inject constructor(
         return dataSource.getTask(id)
     }
 
-    suspend fun deleteTask(id: Int): ServerResponse {
+    suspend fun deleteTask(id: Int): NetworkResponse<ServerResponse> {
         return dataSource.deleteTask(id)
     }
 }

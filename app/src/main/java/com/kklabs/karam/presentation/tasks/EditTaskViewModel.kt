@@ -101,14 +101,22 @@ class EditTaskViewModel @Inject constructor(
                 }
                 return@launchIO
             }
-            val res = taskRepository.deleteTask(id)
-            if (res.isSuccessful) {
-                _uiState.update { currentState ->
-                    currentState.copy(isDeleteTaskSuccess = true)
+            when (val res = taskRepository.deleteTask(id)) {
+                is NetworkResponse.Error -> {
+                    _uiState.update { currentState ->
+                        currentState.copy(errorMessage = res.body.message)
+                    }
                 }
-            } else {
-                _uiState.update { currentState ->
-                    currentState.copy(isDeleteTaskSuccess = false)
+                is NetworkResponse.Success -> {
+                    if (res.successBody.isSuccessful) {
+                        _uiState.update { currentState ->
+                            currentState.copy(isDeleteTaskSuccess = true)
+                        }
+                    } else {
+                        _uiState.update { currentState ->
+                            currentState.copy(isDeleteTaskSuccess = false)
+                        }
+                    }
                 }
             }
         } catch (e: Exception) {

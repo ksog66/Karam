@@ -24,7 +24,7 @@ interface DataSource {
 
     suspend fun updateTask(id: Int, request: UpdateTaskRequest): NetworkResponse<TaskResponse>
 
-    suspend fun deleteTask(id: Int): ServerResponse
+    suspend fun deleteTask(id: Int): NetworkResponse<ServerResponse>
 
     suspend fun getTask(id: Int): NetworkResponse<TaskResponse>
 
