@@ -2,6 +2,7 @@ package com.kklabs.karam.data.repo
 
 import com.kklabs.karam.domain.DataSource
 import com.kklabs.karam.data.remote.NetworkResponse
+import com.kklabs.karam.data.remote.model.ServerResponse
 import com.kklabs.karam.data.remote.request.CreateTaskRequest
 import com.kklabs.karam.data.remote.request.UpdateTaskRequest
 import com.kklabs.karam.data.remote.response.TaskResponse
@@ -17,8 +18,8 @@ class TaskRepository @Inject constructor(
         return dataSource.createTask(request)
     }
 
-    suspend fun updateTask(request: UpdateTaskRequest): NetworkResponse<TaskResponse> {
-        return dataSource.updateTask(request)
+    suspend fun updateTask(id: Int, request: UpdateTaskRequest): NetworkResponse<TaskResponse> {
+        return dataSource.updateTask(id, request)
     }
 
     suspend fun getTasks(): NetworkResponse<Nothing> {
@@ -27,5 +28,9 @@ class TaskRepository @Inject constructor(
 
     suspend fun getTask(id: Int): NetworkResponse<TaskResponse> {
         return dataSource.getTask(id)
+    }
+
+    suspend fun deleteTask(id: Int): ServerResponse {
+        return dataSource.deleteTask(id)
     }
 }

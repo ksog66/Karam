@@ -1,5 +1,6 @@
 package com.kklabs.karam.presentation.tasks
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import com.kklabs.karam.data.mapper.toTask
 import com.kklabs.karam.data.remote.NetworkResponse
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
+private const val TAG = "EditTaskViewModel"
 @HiltViewModel
 class EditTaskViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
@@ -37,44 +39,81 @@ class EditTaskViewModel @Inject constructor(
 
 
     private fun fetchTaskDetails(id: Int) = launchIO {
-
-        when (val res = taskRepository.getTask(id)) {
-            is NetworkResponse.Error -> {
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        isTaskFetchSuccess = false,
-                        errorMessage = res.body.message
-                    )
+        try {
+            when (val res = taskRepository.getTask(id)) {
+                is NetworkResponse.Error -> {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isTaskFetchSuccess = false,
+                            errorMessage = res.body.message
+                        )
+                    }
+                }
+                is NetworkResponse.Success -> {
+                    _uiState.update {
+                        EditTaskUiState(
+                            isLoading = false,
+                            isTaskFetchSuccess = true,
+                            task = res.successBody.toTask()
+                        )
+                    }
                 }
             }
-            is NetworkResponse.Success -> {
-                _uiState.update {
-                    EditTaskUiState(
-                        isLoading = false,
-                        isTaskFetchSuccess = true,
-                        task = res.successBody.toTask()
-                    )
-                }
+        } catch (e: Exception) {
+            _uiState.update { currentState ->
+                Log.e(TAG, "fetchTaskDetails: ", e)
+                currentState.copy(errorMessage = e.message)
             }
         }
     }
 
-    fun updateTask(request: UpdateTaskRequest) = launchIO {
-        when (val res = taskRepository.updateTask(request)) {
-            is NetworkResponse.Error -> {
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        isEditSuccessful = false,
-                        errorMessage = res.body.message
-                    )
+    fun updateTask(id: Int, request: UpdateTaskRequest) = launchIO {
+        try {
+            when (val res = taskRepository.updateTask(id, request)) {
+                is NetworkResponse.Error -> {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isEditSuccessful = false,
+                            errorMessage = res.body.message
+                        )
+                    }
+                }
+                is NetworkResponse.Success -> {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isEditSuccessful = true
+                        )
+                    }
                 }
             }
-            is NetworkResponse.Success -> {
+        } catch (e: Exception) {
+            _uiState.update { currentState ->
+                currentState.copy(errorMessage = e.message)
+            }
+        }
+    }
+
+    fun deleteTask(id: Int) = launchIO {
+        try {
+            if (id < 0) {
                 _uiState.update { currentState ->
-                    currentState.copy(
-                        isEditSuccessful = true
-                    )
+                    currentState.copy(errorMessage = "Invalid task id")
                 }
+                return@launchIO
+            }
+            val res = taskRepository.deleteTask(id)
+            if (res.isSuccessful) {
+                _uiState.update { currentState ->
+                    currentState.copy(isDeleteTaskSuccess = true)
+                }
+            } else {
+                _uiState.update { currentState ->
+                    currentState.copy(isDeleteTaskSuccess = false)
+                }
+            }
+        } catch (e: Exception) {
+            _uiState.update { currentState ->
+                currentState.copy(errorMessage = e.message)
             }
         }
     }
@@ -84,6 +123,7 @@ class EditTaskViewModel @Inject constructor(
 data class EditTaskUiState(
     val isLoading: Boolean = false,
     val isEditSuccessful: Boolean = false,
+    val isDeleteTaskSuccess: Boolean? = null,
     val isTaskFetchSuccess: Boolean? = null,
     val errorMessage: String? = null,
     val task: Task? = null

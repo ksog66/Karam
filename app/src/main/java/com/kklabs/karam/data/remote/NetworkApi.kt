@@ -1,5 +1,6 @@
 package com.kklabs.karam.data.remote
 
+import com.kklabs.karam.data.remote.model.ServerResponse
 import com.kklabs.karam.data.remote.request.CreateTaskRequest
 import com.kklabs.karam.data.remote.request.CreateTasklogRequest
 import com.kklabs.karam.data.remote.request.CreateUserRequest
@@ -12,8 +13,10 @@ import com.kklabs.karam.data.remote.response.TaskResponse
 import com.kklabs.karam.data.remote.response.TasklogResponse
 import com.kklabs.karam.data.remote.response.UserResponse
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -35,10 +38,16 @@ interface NetworkApi {
     @GET("/api/v1/task/{id}")
     suspend fun getTask(@Path(Keys.ID) id: Int): NetworkResponse<TaskResponse>
 
-    @POST("/api/v1/task/{id}")
+    @PUT("/api/v1/task/{id}")
     suspend fun updateTask(
+        @Path(Keys.ID) id: Int,
         @Body request: UpdateTaskRequest
     ): NetworkResponse<TaskResponse>
+
+    @DELETE("/api/v1/task/{id}")
+    suspend fun deleteTask(
+        @Path(Keys.ID) id: Int
+    ) : ServerResponse
 
     @GET("/api/v1/task")
     suspend fun getTasks(): NetworkResponse<Nothing>

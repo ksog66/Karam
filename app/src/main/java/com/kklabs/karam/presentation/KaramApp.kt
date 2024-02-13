@@ -142,7 +142,7 @@ fun KaramNavHost(
             arguments = listOf(navArgument(TASK_ID_KEY) { type = NavType.IntType })
         ) {
             EditTaskRoute(modifier = modifier) {
-
+                navHost.navigateUp()
             }
         }
     }

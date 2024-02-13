@@ -16,4 +16,6 @@
     <string name="task_created_successfully">Task created successfully</string>
     <string name="edit_karam">Edit Karam</string>
     <string name="you_ate_5_star">You ate 5 star</string>
+    <string name="update_karam">Update Karam</string>
+    <string name="failed_to_delete_task">Failed to delete the task! Try again</string>
 </resources>

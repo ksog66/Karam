@@ -1,6 +1,7 @@
 package com.kklabs.karam.domain
 
 import com.kklabs.karam.data.remote.NetworkResponse
+import com.kklabs.karam.data.remote.model.ServerResponse
 import com.kklabs.karam.data.remote.request.CreateTaskRequest
 import com.kklabs.karam.data.remote.request.CreateTasklogRequest
 import com.kklabs.karam.data.remote.request.CreateUserRequest
@@ -21,7 +22,9 @@ interface DataSource {
 
     suspend fun createTask(request: CreateTaskRequest): NetworkResponse<TaskResponse>
 
-    suspend fun updateTask(request: UpdateTaskRequest): NetworkResponse<TaskResponse>
+    suspend fun updateTask(id: Int, request: UpdateTaskRequest): NetworkResponse<TaskResponse>
+
+    suspend fun deleteTask(id: Int): ServerResponse
 
     suspend fun getTask(id: Int): NetworkResponse<TaskResponse>
 

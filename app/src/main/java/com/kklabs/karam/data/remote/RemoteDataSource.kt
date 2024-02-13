@@ -1,5 +1,6 @@
 package com.kklabs.karam.data.remote
 
+import com.kklabs.karam.data.remote.model.ServerResponse
 import com.kklabs.karam.domain.DataSource
 import com.kklabs.karam.data.remote.request.CreateTaskRequest
 import com.kklabs.karam.data.remote.request.CreateTasklogRequest
@@ -56,8 +57,8 @@ class RemoteDataSource @Inject constructor(
         }
     }
 
-    override suspend fun updateTask(request: UpdateTaskRequest): NetworkResponse<TaskResponse> {
-        return when (val res = api.updateTask(request)) {
+    override suspend fun updateTask(id: Int, request: UpdateTaskRequest): NetworkResponse<TaskResponse> {
+        return when (val res = api.updateTask(id, request)) {
             is NetworkResponse.Error -> {
                 res
             }
@@ -66,6 +67,10 @@ class RemoteDataSource @Inject constructor(
                 NetworkResponse.Success(res.body)
             }
         }
+    }
+
+    override suspend fun deleteTask(id: Int): ServerResponse {
+        return api.deleteTask(id)
     }
 
     override suspend fun getTask(id: Int): NetworkResponse<TaskResponse> {

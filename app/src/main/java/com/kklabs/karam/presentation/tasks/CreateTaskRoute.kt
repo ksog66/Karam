@@ -14,15 +14,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.DeleteOutline
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -87,7 +90,7 @@ fun AddOrEditTaskScreen(
     modifier: Modifier = Modifier,
     task: Task? = null,
     addNewTask: (request: CreateTaskRequest) -> Unit = {},
-    updateTask: (request: UpdateTaskRequest) -> Unit = {},
+    updateTask: (id: Int, request: UpdateTaskRequest) -> Unit = { _, _ -> },
     deleteTask: (Int) -> Unit = {},
     navigateBack: () -> Unit
 ) {
@@ -100,6 +103,29 @@ fun AddOrEditTaskScreen(
     val isEditing = task != null
     val title =
         if (isEditing) stringResource(id = R.string.edit_karam) else stringResource(id = R.string.add_karam)
+
+    var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Are you sure you want to delete this karam?") },
+            text = { Text("This action cannot be undone") },
+            confirmButton = {
+                TextButton(onClick = {
+                    deleteTask(task?.id ?: -1)
+                }) {
+                    Text("Delete it".uppercase())
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("Cancel".uppercase())
+                }
+            },
+        )
+    }
+
 
     Column(modifier = modifier.fillMaxSize()) {
         Row(
@@ -133,7 +159,7 @@ fun AddOrEditTaskScreen(
             if (isEditing) {
                 IconButton(
                     onClick = {
-                        deleteTask(task?.id ?: -1)
+                        showDeleteDialog = showDeleteDialog.not()
                     },
                     modifier = Modifier
                         .padding(vertical = 16.dp, horizontal = 8.dp)
@@ -198,21 +224,37 @@ fun AddOrEditTaskScreen(
                 .align(Alignment.End)
                 .padding(16.dp),
             onClick = {
-                if (taskName.value.isEmpty()) {
-                    showShortToast(context, "karam name can't be empty")
-                    return@Button
+                if (task != null) {
+                    if (taskName.value.isEmpty()) {
+                        showShortToast(context, "Karam name can't be empty")
+                    }
+                    val request = UpdateTaskRequest(
+                        title = taskName.value.trim(),
+                        icon = selectedIcon.value,
+                        color = selectedColor.value
+                    )
+                    updateTask(task.id, request)
+                } else {
+                    if (taskName.value.isEmpty()) {
+                        showShortToast(context, "karam name can't be empty")
+                        return@Button
+                    }
+                    val request = CreateTaskRequest(
+                        title = taskName.value.trim(),
+                        icon = selectedIcon.value,
+                        color = selectedColor.value,
+                        dateCreated = System.currentTimeMillis()
+                    )
+                    addNewTask(request)
                 }
-                val request = CreateTaskRequest(
-                    title = taskName.value.trim(),
-                    icon = selectedIcon.value,
-                    color = selectedColor.value,
-                    dateCreated = System.currentTimeMillis()
-                )
-                addNewTask(request)
             },
             shape = RoundedCornerShape(8.dp)
         ) {
-            TextP30(text = stringResource(id = R.string.add_karam), color = Color.White)
+            TextP30(
+                text = if (isEditing) stringResource(id = R.string.update_karam) else stringResource(
+                    id = R.string.add_karam
+                ), color = Color.White
+            )
         }
     }
 

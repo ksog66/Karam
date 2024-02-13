@@ -6,8 +6,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.kklabs.karam.R
 import com.kklabs.karam.util.showShortToast
 
 @Composable
@@ -29,7 +31,18 @@ fun EditTaskRoute(
     LaunchedEffect(uiState.isEditSuccessful) {
         uiState.isTaskFetchSuccess?.let {
             if (it) {
-                navigateBack(false)
+                navigateBack(true)
+            }
+        }
+    }
+
+    LaunchedEffect(uiState.isDeleteTaskSuccess) {
+        uiState.isDeleteTaskSuccess?.let {
+            if (it) {
+                showShortToast(context, "Task Successfully deleted.")
+                navigateBack(true)
+            } else {
+                showShortToast(context, "Failed to delete the task! Try again")
             }
         }
     }
@@ -45,6 +58,7 @@ fun EditTaskRoute(
                 modifier = modifier.fillMaxSize(),
                 task = uiState.task,
                 updateTask = viewModel::updateTask,
+                deleteTask = viewModel::deleteTask,
                 navigateBack = {
                     navigateBack.invoke(false)
                 }
