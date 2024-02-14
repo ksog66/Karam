@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -41,6 +43,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kklabs.karam.R
 import com.kklabs.karam.data.remote.response.TasksKaram
+import com.kklabs.karam.presentation.components.ComponentRectangle
 import com.kklabs.karam.presentation.components.Heatmap
 import com.kklabs.karam.presentation.components.TextH10
 import com.kklabs.karam.presentation.components.TextH20
@@ -56,7 +59,7 @@ fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel(),
     userCreatedYear: Int,
     onNewTaskClick: () -> Unit,
-    onLogClick: (name: String, id:Int) -> Unit,
+    onLogClick: (name: String, id: Int) -> Unit,
     onTaskClick: (Int) -> Unit
 ) {
     val yearRange = remember {
@@ -104,7 +107,7 @@ fun HomeRoute(
         }
 
         is HomeFeedUiState.Loading -> {
-
+            HomeLoadingScreen()
         }
 
         is HomeFeedUiState.Success -> {
@@ -133,7 +136,7 @@ fun HomeScreen(
     onNewTaskClick: () -> Unit,
     selectedYear: Int,
     onSelectYearClick: () -> Unit,
-    onLogClick: (name: String, id:Int) -> Unit,
+    onLogClick: (name: String, id: Int) -> Unit,
     onTaskClick: (Int) -> Unit
 ) {
     Scaffold(
@@ -234,5 +237,31 @@ fun YearSelection(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun HomeLoadingScreen(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(top = 56.dp, start = 12.dp, end = 12.dp)
+    ) {
+        ComponentRectangle(
+            isLoadingCompleted = false,
+            isLightModeActive = false,
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        ComponentRectangle(
+            isLoadingCompleted = false,
+            isLightModeActive = false,
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        ComponentRectangle(
+            isLoadingCompleted = false,
+            isLightModeActive = false,
+        )
     }
 }

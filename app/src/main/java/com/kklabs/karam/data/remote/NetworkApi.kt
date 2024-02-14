@@ -47,7 +47,7 @@ interface NetworkApi {
     @DELETE("/api/v1/task/{id}")
     suspend fun deleteTask(
         @Path(Keys.ID) id: Int
-    ) : NetworkResponse<ServerResponse>
+    ): NetworkResponse<ServerResponse>
 
     @GET("/api/v1/task")
     suspend fun getTasks(): NetworkResponse<Nothing>

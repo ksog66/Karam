@@ -24,6 +24,7 @@ class HomeViewModel @Inject constructor(
 
     }) {
         try {
+            _uiState.value = HomeFeedUiState.Loading
             when (val res = homeRepository.getHomeData(year)) {
                 is NetworkResponse.Error -> {
                     _uiState.update { _ ->
