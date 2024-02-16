@@ -20,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +39,7 @@ import com.kklabs.karam.presentation.components.TaskLogInput
 import com.kklabs.karam.presentation.components.TasklogsComponent
 import com.kklabs.karam.presentation.components.TextH20
 import com.kklabs.karam.util.showShortToast
+import kotlinx.coroutines.launch
 
 @Composable
 fun TasklogsRoute(
@@ -51,7 +53,9 @@ fun TasklogsRoute(
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val isLogAdded = rememberSaveable { (mutableStateOf(false)) }
+    val isLogAdded = rememberSaveable {
+        mutableStateOf(uiState.isLogAdded)
+    }
 
     LaunchedEffect(uiState.errorMessage) {
         uiState.errorMessage?.let { message ->
@@ -59,7 +63,13 @@ fun TasklogsRoute(
         }
     }
 
-    LaunchedEffect(uiState.isLogAdded) {
+    LaunchedEffect(isLogAdded.value) {
+        if (isLogAdded.value != null && isLogAdded.value!!.not()) {
+            viewModel.resetUiState()
+        }
+    }
+
+    LaunchedEffect(isLogAdded.value, uiState.isLogAdded) {
         uiState.isLogAdded?.let {
             isLogAdded.value = it
         }
@@ -71,7 +81,7 @@ fun TasklogsRoute(
         taskName = taskName,
         sendTasklog = viewModel::createTasklogs,
         navigateBack = navigateBack,
-        isNewLogAdded = isLogAdded
+        isLogAdded = isLogAdded
     )
 }
 
@@ -82,12 +92,15 @@ fun TasklogsScreen(
     taskName: String,
     sendTasklog: (message: String) -> Unit,
     navigateBack: () -> Unit,
-    isNewLogAdded: MutableState<Boolean>,
+    isLogAdded: MutableState<Boolean?>,
 ) {
     val lazyListState = rememberLazyListState()
-    LaunchedEffect(isNewLogAdded) {
-        if (isNewLogAdded.value) {
-            lazyListState.scrollToItem(0)
+    LaunchedEffect(isLogAdded.value) {
+        isLogAdded.value?.let {
+            if (it) {
+                lazyListState.animateScrollToItem(0)
+                isLogAdded.value = false
+            }
         }
     }
     Scaffold(
