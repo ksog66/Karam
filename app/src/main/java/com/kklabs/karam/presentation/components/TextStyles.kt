@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -99,6 +100,7 @@ fun TextH30(
     textAlign: TextAlign? = null,
     color: Color = Color.Black,
     fontWeight: FontWeight? = null,
+    fontStyle: FontStyle? = null,
     maxLines: Int = Int.MAX_VALUE,
     disableScale: Boolean = false,
     fontSize: TextUnit? = null,
@@ -112,6 +114,7 @@ fun TextH30(
         textAlign = textAlign,
         fontWeight = fontWeight ?: FontWeight.W600,
         maxLines = maxLines,
+        fontStyle = fontStyle,
         overflow = TextOverflow.Ellipsis,
         modifier = modifier,
         color = color
@@ -145,6 +148,7 @@ fun TextH40(
     text: String,
     color: Color = Color.Black,
     modifier: Modifier = Modifier,
+    fontStyle: FontStyle? = null,
     textAlign: TextAlign? = null,
     maxLines: Int = Int.MAX_VALUE,
     fontWeight: FontWeight = FontWeight.W500,
@@ -158,6 +162,7 @@ fun TextH40(
         lineHeight = if (disableScale) 21.nonScaledSp else 21.sp,
         textAlign = textAlign,
         maxLines = maxLines,
+        fontStyle = fontStyle,
         overflow = TextOverflow.Ellipsis,
         modifier = modifier
     )

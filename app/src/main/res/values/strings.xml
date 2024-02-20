@@ -20,4 +20,5 @@
     <string name="failed_to_delete_task">Failed to delete the task! Try again</string>
     <string name="adding_karam">Adding karam</string>
     <string name="updating_karam">Updating karam</string>
+    <string name="karam_shlok"><i>Karmanye vadhikaraste Ma Phaleshu Kadachana, \nMa Karmaphalaheturbhurma Te Sangostvakarmani</i></string>
 </resources>
