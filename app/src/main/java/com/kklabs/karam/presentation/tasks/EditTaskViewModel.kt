@@ -69,10 +69,16 @@ class EditTaskViewModel @Inject constructor(
 
     fun updateTask(id: Int, request: UpdateTaskRequest) = launchIO {
         try {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isLoading = true
+                )
+            }
             when (val res = taskRepository.updateTask(id, request)) {
                 is NetworkResponse.Error -> {
                     _uiState.update { currentState ->
                         currentState.copy(
+                            isLoading = false,
                             isEditSuccessful = false,
                             errorMessage = res.body.message
                         )
@@ -81,6 +87,7 @@ class EditTaskViewModel @Inject constructor(
                 is NetworkResponse.Success -> {
                     _uiState.update { currentState ->
                         currentState.copy(
+                            isLoading = false,
                             isEditSuccessful = true
                         )
                     }
@@ -88,7 +95,7 @@ class EditTaskViewModel @Inject constructor(
             }
         } catch (e: Exception) {
             _uiState.update { currentState ->
-                currentState.copy(errorMessage = e.message)
+                currentState.copy(isLoading = false, errorMessage = e.message)
             }
         }
     }

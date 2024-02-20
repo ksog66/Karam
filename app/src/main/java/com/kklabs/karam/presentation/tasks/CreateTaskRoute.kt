@@ -2,6 +2,7 @@ package com.kklabs.karam.presentation.tasks
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -117,160 +118,168 @@ fun AddOrEditTaskScreen(
 
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
 
-    if (showLoader.value) {
-        Loader(modifier = Modifier.fillMaxSize())
-    }
-
-    if (showDeleteDialog) {
-        AlertDialog(
-            onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Are you sure you want to delete this karam?") },
-            text = { Text("This action cannot be undone") },
-            confirmButton = {
-                TextButton(onClick = {
-                    deleteTask(task?.id ?: -1)
-                }) {
-                    Text("Delete it".uppercase())
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showDeleteDialog = false }) {
-                    Text("Cancel".uppercase())
-                }
-            },
-        )
-    }
-
-
-    Column(modifier = modifier.fillMaxSize()) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+    Box(
+        modifier = modifier.fillMaxSize()
+    ) {
+        Column(modifier = Modifier.fillMaxSize()) {
             Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(
-                    onClick = navigateBack,
-                    modifier = Modifier
-                        .padding(vertical = 16.dp, horizontal = 8.dp)
-                        .background(Color.Black, shape = RoundedCornerShape(8.dp))
-                        .size(36.dp)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        modifier = Modifier.size(24.dp),
-                        imageVector = Icons.Filled.ArrowBackIosNew,
-                        contentDescription = "Go Back",
-                        tint = Color.White
+                    IconButton(
+                        onClick = navigateBack,
+                        modifier = Modifier
+                            .padding(vertical = 16.dp, horizontal = 8.dp)
+                            .background(Color.Black, shape = RoundedCornerShape(8.dp))
+                            .size(36.dp)
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(24.dp),
+                            imageVector = Icons.Filled.ArrowBackIosNew,
+                            contentDescription = "Go Back",
+                            tint = Color.White
+                        )
+                    }
+
+                    TextH20(
+                        text = title
                     )
                 }
 
-                TextH20(
-                    text = title
+                if (isEditing) {
+                    IconButton(
+                        onClick = {
+                            showDeleteDialog = showDeleteDialog.not()
+                        },
+                        modifier = Modifier
+                            .padding(vertical = 16.dp, horizontal = 8.dp)
+                            .background(Color.Black, shape = RoundedCornerShape(8.dp))
+                            .size(36.dp)
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(24.dp),
+                            imageVector = Icons.Filled.DeleteOutline,
+                            contentDescription = "Delete Task",
+                            tint = Color.White
+                        )
+                    }
+                }
+            }
+
+            OutlinedTextField(
+                value = taskName.value,
+                onValueChange = {
+                    taskName.value = it
+                },
+                textStyle = TextStyle.Default.copy(
+                    fontSize = 14.sp
+                ),
+                label = { Text("Name") },
+                placeholder = { Text("Enter karam name") },
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 4.dp)
+                    .fillMaxWidth()
+            )
+
+
+            Spacer(modifier = Modifier.height(24.dp))
+            TextH40(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                text = stringResource(id = R.string.icon_literal)
+            )
+            IconsGrid(
+                modifier = Modifier.fillMaxWidth(),
+                selectedIcon = selectedIcon.value,
+                onIconSelect = {
+                    selectedIcon.value = it
+                }
+            )
+
+
+            Spacer(modifier = Modifier.height(24.dp))
+            TextH40(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                text = stringResource(id = R.string.color_literal)
+            )
+            ColorsGrid(
+                modifier = Modifier.fillMaxWidth(),
+                selectedColor = selectedColor.value,
+                onColorSelect = {
+                    selectedColor.value = it
+                }
+            )
+
+            Button(
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(16.dp),
+                onClick = {
+                    if (task != null) {
+                        if (taskName.value.isEmpty()) {
+                            showShortToast(context, "Karam name can't be empty")
+                        }
+                        val request = UpdateTaskRequest(
+                            title = taskName.value.trim(),
+                            icon = selectedIcon.value,
+                            color = selectedColor.value
+                        )
+                        updateTask(task.id, request)
+                    } else {
+                        if (taskName.value.isEmpty()) {
+                            showShortToast(context, "karam name can't be empty")
+                            return@Button
+                        }
+                        val request = CreateTaskRequest(
+                            title = taskName.value.trim(),
+                            icon = selectedIcon.value,
+                            color = selectedColor.value,
+                            dateCreated = System.currentTimeMillis()
+                        )
+                        addNewTask(request)
+                    }
+                },
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                TextP30(
+                    text = if (isEditing) stringResource(id = R.string.update_karam) else stringResource(
+                        id = R.string.add_karam
+                    ), color = Color.White
                 )
             }
-
-            if (isEditing) {
-                IconButton(
-                    onClick = {
-                        showDeleteDialog = showDeleteDialog.not()
-                    },
-                    modifier = Modifier
-                        .padding(vertical = 16.dp, horizontal = 8.dp)
-                        .background(Color.Black, shape = RoundedCornerShape(8.dp))
-                        .size(36.dp)
-                ) {
-                    Icon(
-                        modifier = Modifier.size(24.dp),
-                        imageVector = Icons.Filled.DeleteOutline,
-                        contentDescription = "Delete Task",
-                        tint = Color.White
-                    )
-                }
-            }
         }
 
-        OutlinedTextField(
-            value = taskName.value,
-            onValueChange = {
-                taskName.value = it
-            },
-            textStyle = TextStyle.Default.copy(
-                fontSize = 14.sp
-            ),
-            label = { Text("Name") },
-            placeholder = { Text("Enter karam name") },
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 4.dp)
-                .fillMaxWidth()
-        )
+        if (showLoader.value) {
+            Loader(modifier = Modifier.fillMaxSize())
+        }
 
-
-        Spacer(modifier = Modifier.height(24.dp))
-        TextH40(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            text = stringResource(id = R.string.icon_literal)
-        )
-        IconsGrid(
-            modifier = Modifier.fillMaxWidth(),
-            selectedIcon = selectedIcon.value,
-            onIconSelect = {
-                selectedIcon.value = it
-            }
-        )
-
-
-        Spacer(modifier = Modifier.height(24.dp))
-        TextH40(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            text = stringResource(id = R.string.color_literal)
-        )
-        ColorsGrid(
-            modifier = Modifier.fillMaxWidth(),
-            selectedColor = selectedColor.value,
-            onColorSelect = {
-                selectedColor.value = it
-            }
-        )
-
-        Button(
-            modifier = Modifier
-                .align(Alignment.End)
-                .padding(16.dp),
-            onClick = {
-                if (task != null) {
-                    if (taskName.value.isEmpty()) {
-                        showShortToast(context, "Karam name can't be empty")
+        if (showDeleteDialog) {
+            AlertDialog(
+                onDismissRequest = { showDeleteDialog = false },
+                title = { Text("Are you sure you want to delete this karam?") },
+                text = { Text("This action cannot be undone") },
+                confirmButton = {
+                    TextButton(onClick = {
+                        deleteTask(task?.id ?: -1)
+                    }) {
+                        Text("Delete it".uppercase())
                     }
-                    val request = UpdateTaskRequest(
-                        title = taskName.value.trim(),
-                        icon = selectedIcon.value,
-                        color = selectedColor.value
-                    )
-                    updateTask(task.id, request)
-                } else {
-                    if (taskName.value.isEmpty()) {
-                        showShortToast(context, "karam name can't be empty")
-                        return@Button
+                },
+                dismissButton = {
+                    TextButton(onClick = { showDeleteDialog = false }) {
+                        Text("Cancel".uppercase())
                     }
-                    val request = CreateTaskRequest(
-                        title = taskName.value.trim(),
-                        icon = selectedIcon.value,
-                        color = selectedColor.value,
-                        dateCreated = System.currentTimeMillis()
-                    )
-                    addNewTask(request)
-                }
-            },
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            TextP30(
-                text = if (isEditing) stringResource(id = R.string.update_karam) else stringResource(
-                    id = R.string.add_karam
-                ), color = Color.White
+                },
             )
         }
+
     }
+
+
+
+
 
 }

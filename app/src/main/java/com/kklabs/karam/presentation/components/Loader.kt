@@ -27,7 +27,7 @@ fun Loader(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(color = Color.DarkGray),
+            .background(color = Color(0x80000000)),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
