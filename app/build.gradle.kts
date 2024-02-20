@@ -125,6 +125,8 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.paging)
 
+    implementation(libs.lottie.compose)
+
     //network logger
     debugImplementation(libs.chucker.debug)
     releaseImplementation(libs.chucker.release)

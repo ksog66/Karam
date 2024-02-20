@@ -22,6 +22,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -43,6 +44,7 @@ import com.kklabs.karam.domain.model.Task
 import com.kklabs.karam.domain.model.karamColors
 import com.kklabs.karam.presentation.components.ColorsGrid
 import com.kklabs.karam.presentation.components.IconsGrid
+import com.kklabs.karam.presentation.components.Loader
 import com.kklabs.karam.presentation.components.TextH10
 import com.kklabs.karam.presentation.components.TextH20
 import com.kklabs.karam.presentation.components.TextH40
@@ -59,6 +61,8 @@ fun CreateTaskRoute(
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    val showLoader = rememberSaveable { (mutableStateOf(true)) }
+
     when (uiState) {
         is CreateTaskUiState.Error -> {
             val errorMessage = (uiState as CreateTaskUiState.Error).message
@@ -67,17 +71,23 @@ fun CreateTaskRoute(
         }
 
         is CreateTaskUiState.Idle -> {
+            showLoader.value = false
+        }
 
+        is CreateTaskUiState.Loading -> {
+            showLoader.value = true
         }
 
         is CreateTaskUiState.Success -> {
             showShortToast(context, stringResource(id = R.string.task_created_successfully))
+            showLoader.value = false
             navigateBack(true)
         }
     }
     AddOrEditTaskScreen(
         modifier = modifier,
         task = null,
+        showLoader = showLoader,
         addNewTask = viewModel::createTask,
         navigateBack = {
             navigateBack.invoke(false)
@@ -89,6 +99,7 @@ fun CreateTaskRoute(
 fun AddOrEditTaskScreen(
     modifier: Modifier = Modifier,
     task: Task? = null,
+    showLoader: MutableState<Boolean>,
     addNewTask: (request: CreateTaskRequest) -> Unit = {},
     updateTask: (id: Int, request: UpdateTaskRequest) -> Unit = { _, _ -> },
     deleteTask: (Int) -> Unit = {},
@@ -105,6 +116,10 @@ fun AddOrEditTaskScreen(
         if (isEditing) stringResource(id = R.string.edit_karam) else stringResource(id = R.string.add_karam)
 
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
+
+    if (showLoader.value) {
+        Loader(modifier = Modifier.fillMaxSize())
+    }
 
     if (showDeleteDialog) {
         AlertDialog(

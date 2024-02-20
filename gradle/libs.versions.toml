@@ -25,6 +25,7 @@ constraintlayout = "2.1.4"
 constraintlayout-compose = "1.0.1"
 paging = "3.2.1"
 room-ktx = "2.6.1"
+lottie = "6.3.0"
 
 
 [libraries]
@@ -72,6 +73,8 @@ androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = 
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room-ktx" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room-ktx" }
 androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room-ktx" }
+
+lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

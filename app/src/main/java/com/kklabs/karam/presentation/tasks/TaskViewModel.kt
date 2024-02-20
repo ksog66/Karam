@@ -24,22 +24,18 @@ class TaskViewModel @Inject constructor(
 
     }) {
         try {
+            _uiState.value = CreateTaskUiState.Loading
             when (val res = taskRepository.createTask(request)) {
                 is NetworkResponse.Error -> {
-                    _uiState.update { _ ->
-                        CreateTaskUiState.Error(res.body.message)
-                    }
+                    _uiState.value = CreateTaskUiState.Error(res.body.message)
                 }
+
                 is NetworkResponse.Success -> {
-                    _uiState.update { _ ->
-                        CreateTaskUiState.Success(res.successBody)
-                    }
+                    _uiState.value = CreateTaskUiState.Success(res.successBody)
                 }
             }
         } catch (e: Exception) {
-            _uiState.update { _ ->
-                CreateTaskUiState.Error(e.localizedMessage)
-            }
+            _uiState.value = CreateTaskUiState.Error(e.localizedMessage)
         }
     }
 
@@ -52,6 +48,8 @@ class TaskViewModel @Inject constructor(
 
 sealed interface CreateTaskUiState {
     object Idle : CreateTaskUiState
+
+    object Loading : CreateTaskUiState
 
     data class Success(val task: TaskResponse) : CreateTaskUiState
 
