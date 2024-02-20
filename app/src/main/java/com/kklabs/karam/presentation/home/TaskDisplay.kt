@@ -3,7 +3,7 @@ package com.kklabs.karam.presentation.home
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import android.graphics.Color as MColor
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -109,13 +110,17 @@ fun TaskDisplay(
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(36.dp)
+                            .size(42.dp)
                             .clip(RoundedCornerShape(8.dp))
+                            .background(color = Color(MColor.parseColor(baseColor)))
+                            .padding(4.dp),
+                        contentAlignment = Alignment.Center
                     ) {
                         Image(
                             painter = painterResource(fetchIcon(task?.icon)), // Replace with the actual drawable resource
                             contentDescription = null, // Provide a meaningful content description
-                            modifier = Modifier.size(36.dp)
+                            modifier = Modifier.size(36.dp),
+                            colorFilter = ColorFilter.tint(Color.White)
                         )
                     }
                     Spacer(modifier = Modifier.width(8.dp))

@@ -35,10 +35,10 @@ fun generateCommitColor(commitCount: Int, baseColor: String): Int {
     val baseColorInt = Color.parseColor(baseColor)
 
     return when (commitCount) {
-        in 1..2 -> ColorUtils.blendARGB(baseColorInt, Color.WHITE, 0.8f) // Very light shade
-        in 3..4 -> ColorUtils.blendARGB(baseColorInt, Color.WHITE, 0.6f) // Light shade
-        in 5..6 -> ColorUtils.blendARGB(baseColorInt, Color.WHITE, 0.4f) // Less light shade
-        in 7..8 -> ColorUtils.blendARGB(baseColorInt, Color.WHITE, 0.2f)
+        in 1..2 -> ColorUtils.blendARGB(baseColorInt, Color.WHITE, 0.7f) // Very light shade
+        in 3..4 -> ColorUtils.blendARGB(baseColorInt, Color.WHITE, 0.5f) // Light shade
+        in 5..6 -> ColorUtils.blendARGB(baseColorInt, Color.WHITE, 0.3f) // Less light shade
+        in 7..8 -> ColorUtils.blendARGB(baseColorInt, Color.WHITE, 0.1f)
         else -> baseColorInt
     }
 }

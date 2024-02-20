@@ -253,7 +253,12 @@ fun AddOrEditTaskScreen(
         }
 
         if (showLoader.value) {
-            Loader(modifier = Modifier.fillMaxSize())
+            Loader(
+                modifier = Modifier.fillMaxSize(),
+                text = if (isEditing) stringResource(id = R.string.updating_karam) else stringResource(
+                    id = R.string.adding_karam
+                )
+            )
         }
 
         if (showDeleteDialog) {
@@ -277,9 +282,6 @@ fun AddOrEditTaskScreen(
         }
 
     }
-
-
-
 
 
 }

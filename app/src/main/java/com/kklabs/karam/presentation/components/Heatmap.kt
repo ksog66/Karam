@@ -55,7 +55,7 @@ fun Heatmap(
                             showShortToast(
                                 context,
                                 if (date > System.currentTimeMillis()) {
-                                    "You might not see ${formatDate(date)}"
+                                    "You might eat a 5 star on ${formatDate(date)}"
                                 } else if (count <= 0) {
                                     "You ate a 5 star on ${formatDate(date)}"
                                 } else {
