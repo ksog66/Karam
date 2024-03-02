@@ -1,6 +1,5 @@
 package com.kklabs.karam.presentation.auth
 
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
@@ -17,6 +16,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,6 +50,7 @@ fun AuthRoute(
 
     val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = state.existingUser) {
         if (state.existingUser != null) {
@@ -83,14 +84,15 @@ fun AuthRoute(
         modifier = modifier,
         state
     ) {
-        lifecycleOwner.lifecycleScope.launch {
-            val signInIntentSender = googleAuthUiClient.signIn()
-            launcher.launch(
-                IntentSenderRequest.Builder(
-                    signInIntentSender ?: return@launch
-                ).build()
-            )
-        }
+        viewModel.oneTapSignIn()
+//        lifecycleOwner.lifecycleScope.launch {
+//            val signInIntentSender = googleAuthUiClient.signIn()
+//            launcher.launch(
+//                IntentSenderRequest.Builder(
+//                    signInIntentSender ?: return@launch
+//                ).build()
+//            )
+//        }
     }
 }
 
