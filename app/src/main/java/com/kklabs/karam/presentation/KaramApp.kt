@@ -22,7 +22,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.kklabs.karam.MainViewModel
 import com.kklabs.karam.presentation.auth.AuthRoute
-import com.kklabs.karam.presentation.auth.GoogleAuthUiClient
 import com.kklabs.karam.presentation.home.FORCE_FETCH_HOME_FEED_KEY
 import com.kklabs.karam.presentation.home.HomeRoute
 import com.kklabs.karam.presentation.navigation.KaramScreens
@@ -38,7 +37,7 @@ import java.util.Date
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun KaramApp(modifier: Modifier = Modifier, googleAuthUiClient: GoogleAuthUiClient) {
+fun KaramApp(modifier: Modifier = Modifier) {
 
     Surface(
         modifier = modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
@@ -48,8 +47,7 @@ fun KaramApp(modifier: Modifier = Modifier, googleAuthUiClient: GoogleAuthUiClie
         Scaffold { paddingValues ->
             KaramNavHost(
                 modifier = Modifier.padding(paddingValues),
-                navHost = navController,
-                googleAuthUiClient = googleAuthUiClient
+                navHost = navController
             )
         }
     }
@@ -59,8 +57,7 @@ fun KaramApp(modifier: Modifier = Modifier, googleAuthUiClient: GoogleAuthUiClie
 @Composable
 fun KaramNavHost(
     modifier: Modifier = Modifier,
-    navHost: NavHostController,
-    googleAuthUiClient: GoogleAuthUiClient
+    navHost: NavHostController
 ) {
     val mainViewModel: MainViewModel = hiltViewModel()
     val existingUser by mainViewModel.existingUser.collectAsStateWithLifecycle()
@@ -80,7 +77,7 @@ fun KaramNavHost(
         }
 
         composable(route = KaramScreens.LoginScreen.route) {
-            AuthRoute(modifier, googleAuthUiClient) {
+            AuthRoute(modifier) {
                 navHost.navigate(
                     route = KaramScreens.Home.route,
                     navOptions = NavOptions.Builder()

@@ -1,6 +1,6 @@
 package com.kklabs.karam.presentation.auth
 
-import androidx.activity.ComponentActivity
+import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -16,12 +16,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -29,28 +27,59 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.GoogleAuthProvider
 import com.kklabs.karam.R
+import com.kklabs.karam.core.Response
+import com.kklabs.karam.presentation.components.Loader
 import com.kklabs.karam.presentation.components.TextH1
-import com.kklabs.karam.presentation.components.TextH10
 import com.kklabs.karam.presentation.components.TextH30
-import com.kklabs.karam.presentation.components.TextH40
 import com.kklabs.karam.presentation.components.TextP30
 import com.kklabs.karam.ui.theme.KaramTheme
 import com.kklabs.karam.util.showLongToast
-import kotlinx.coroutines.launch
+import com.kklabs.karam.util.showShortToast
 
 @Composable
 fun AuthRoute(
     modifier: Modifier = Modifier,
-    googleAuthUiClient: GoogleAuthUiClient,
     viewModel: AuthViewModel = hiltViewModel(),
     navigateToHome: () -> Unit
 ) {
-
-    val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val coroutineScope = rememberCoroutineScope()
+
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            try {
+                val credentials = viewModel.oneTapClient.getSignInCredentialFromIntent(result.data)
+                val googleIdToken = credentials.googleIdToken
+                val googleCredentials = GoogleAuthProvider.getCredential(googleIdToken, null)
+                viewModel.signInWithGoogle(googleCredentials)
+            } catch (it: ApiException) {
+                print(it)
+            }
+        }
+    }
+
+    when (val oneTapSignInResponse = viewModel.oneTapSignInResponse) {
+        is Response.Failure -> {
+            showShortToast(context, oneTapSignInResponse.e.localizedMessage)
+        }
+        is Response.Loading -> {
+            Loader(
+                modifier = Modifier.fillMaxSize(),
+                text = "Signing in with google..."
+            )
+        }
+        is Response.Success -> {
+            oneTapSignInResponse.data?.let {signInResult ->
+                LaunchedEffect(signInResult) {
+                    val intent = IntentSenderRequest.Builder(signInResult.pendingIntent.intentSender).build()
+                    launcher.launch(intent)
+                }
+            }
+        }
+    }
 
     LaunchedEffect(key1 = state.existingUser) {
         if (state.existingUser != null) {
@@ -62,37 +91,14 @@ fun AuthRoute(
         if (state.isSignInSuccessful) {
             navigateToHome.invoke()
             viewModel.resetState()
-            googleAuthUiClient.signOut()
         }
     }
-
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartIntentSenderForResult(),
-        onResult = { result ->
-            if (result.resultCode == ComponentActivity.RESULT_OK) {
-                lifecycleOwner.lifecycleScope.launch {
-                    val signInResult = googleAuthUiClient.signInWithIntent(
-                        intent = result.data ?: return@launch
-                    )
-                    viewModel.onSignInResult(signInResult)
-                }
-            }
-        }
-    )
 
     AuthScreen(
         modifier = modifier,
         state
     ) {
         viewModel.oneTapSignIn()
-//        lifecycleOwner.lifecycleScope.launch {
-//            val signInIntentSender = googleAuthUiClient.signIn()
-//            launcher.launch(
-//                IntentSenderRequest.Builder(
-//                    signInIntentSender ?: return@launch
-//                ).build()
-//            )
-//        }
     }
 }
 
@@ -148,8 +154,6 @@ fun AuthScreen(
         }
 
     }
-
-
 }
 
 

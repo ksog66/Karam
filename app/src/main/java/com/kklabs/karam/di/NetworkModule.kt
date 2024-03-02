@@ -1,9 +1,17 @@
 package com.kklabs.karam.di
 
+import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.chuckerteam.chucker.api.ChuckerInterceptor
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.kklabs.karam.BuildConfig
+import com.kklabs.karam.Constants.SIGN_IN_REQUEST
+import com.kklabs.karam.Constants.SIGN_UP_REQUEST
+import com.kklabs.karam.R
 import com.kklabs.karam.data.local.KaramDB
 import com.kklabs.karam.data.remote.NetworkApi
 import com.kklabs.karam.data.remote.CommonHeadersInterceptor
@@ -24,6 +32,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Qualifier
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
@@ -37,6 +46,41 @@ object NetworkModule {
     fun provideContext(@ApplicationContext context: Context): Context {
         return context
     }
+    @Provides
+    fun provideFirebaseAuth() = Firebase.auth
+
+    @Provides
+    @Named(SIGN_IN_REQUEST)
+    fun provideSignInRequest(
+        app: Application
+    ) = BeginSignInRequest.builder()
+        .setGoogleIdTokenRequestOptions(
+            BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                .setSupported(true)
+                .setServerClientId(app.getString(R.string.web_client_id))
+                .setFilterByAuthorizedAccounts(true)
+                .build())
+        .setAutoSelectEnabled(true)
+        .build()
+
+    @Provides
+    @Named(SIGN_UP_REQUEST)
+    fun provideSignUpRequest(
+        app: Application
+    ) = BeginSignInRequest.builder()
+        .setGoogleIdTokenRequestOptions(
+            BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                .setSupported(true)
+                .setServerClientId(app.getString(R.string.web_client_id))
+                .setFilterByAuthorizedAccounts(false)
+                .build())
+        .build()
+
+    @Provides
+    fun provideOneTapClient(
+        @ApplicationContext
+        context: Context
+    ) = Identity.getSignInClient(context)
 
     @Singleton
     @Provides

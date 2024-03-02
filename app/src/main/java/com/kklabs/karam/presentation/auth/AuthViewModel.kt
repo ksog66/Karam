@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.AuthCredential
 import com.kklabs.karam.data.ds.ConfigPreferences
 import com.kklabs.karam.data.mapper.toUser
@@ -30,6 +31,7 @@ private const val TAG = "AuthViewModel"
 class AuthViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
+    val oneTapClient: SignInClient,
     private val configPreferences: ConfigPreferences
 ) : BaseViewModel() {
 
@@ -39,39 +41,6 @@ class AuthViewModel @Inject constructor(
 
     var oneTapSignInResponse by mutableStateOf<OneTapSignInResponse>(Success(null))
         private set
-
-    var signInWithGoogleResponse by mutableStateOf<SignInWithGoogleResponse>(Success(null))
-        private set
-
-
-    fun onSignInResult(result: SignInResult) = launchIO {
-        try {
-            val isSignInSuccessful = result.data != null && !result.data.isDetailNull()
-            if (isSignInSuccessful) {
-                val user =
-                    createUser(
-                        result.data!!.name!!,
-                        result.data.email!!,
-                        result.data.username!!
-                    )
-                saveUser(user)
-            }
-            _state.update {
-                it.copy(
-                    isSignInSuccessful = isSignInSuccessful,
-                    signInError = result.errorMessage
-                )
-            }
-        } catch (e: Exception) {
-            _state.update {
-                it.copy(
-                    isSignInSuccessful = false,
-                    signInError = e.message,
-                    existingUser = null
-                )
-            }
-        }
-    }
 
     fun resetState() {
         _state.update { SignInState() }
@@ -106,9 +75,48 @@ class AuthViewModel @Inject constructor(
         oneTapSignInResponse = authRepository.oneTapSignInWithGoogle()
     }
 
-    fun signInWithGoogle(googleCredential: AuthCredential) = viewModelScope.launch {
+    fun signInWithGoogle(googleCredential: AuthCredential) = launchIO {
         oneTapSignInResponse = Loading
-        signInWithGoogleResponse = authRepository.firebaseSignInWithGoogle(googleCredential)
+        try {
+            val signInWithGoogleResponse = authRepository.firebaseSignInWithGoogle(googleCredential)
+            when (signInWithGoogleResponse) {
+                is Failure -> {
+                    _state.update {
+                        it.copy(
+                            isSignInSuccessful = false,
+                            signInError = signInWithGoogleResponse.e.message,
+                            existingUser = null
+                        )
+                    }
+                }
+                is Loading -> {
+
+                }
+                is Success -> {
+                    val user =
+                        createUser(
+                            signInWithGoogleResponse.data!!.name!!,
+                            signInWithGoogleResponse.data.email!!,
+                            signInWithGoogleResponse.data.username!!
+                        )
+                    saveUser(user)
+                    _state.update {
+                        it.copy(
+                            isSignInSuccessful = true,
+                            signInError = null
+                        )
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            _state.update {
+                it.copy(
+                    isSignInSuccessful = false,
+                    signInError = e.message,
+                    existingUser = null
+                )
+            }
+        }
     }
 
     private suspend fun saveAuthToken(token: String) {
